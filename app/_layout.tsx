@@ -25,10 +25,12 @@ export default function RootLayout() {
   }
 
   return (
-    
-      <Stack>
-      
-      </Stack>
+
+    <Stack>
+      <Stack.Screen name='index' options={{ headerShown: false }} />
+      <Stack.Screen name='login'  />
+      <Stack.Screen name='signup'  />
+    </Stack>
 
   );
 }
