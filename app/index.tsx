@@ -10,7 +10,7 @@ import { defaultStyles } from '@/constants/Styles'
 const Page = () => {
   const [assets] = useAssets([require('@/assets/videos/intro.mp4')])
   return (
-    <View style={styles.container}>
+    <View style={[defaultStyles.container,{justifyContent:'space-between'}]}>
       {assets && <Video
         shouldPlay
         isMuted
@@ -26,14 +26,14 @@ const Page = () => {
           asChild
           style={[defaultStyles.pillButton, { flex: 1, backgroundColor: Colors.dark }]}>
           <TouchableOpacity>
-            <Text style={[styles.btn_txt,{}]}>Log in</Text>
+            <Text style={[defaultStyles.buttonText]}>Log in</Text>
           </TouchableOpacity>
         </Link>
         <Link href={'/signup'}
           asChild
           style={[defaultStyles.pillButton, { flex: 1, backgroundColor: Colors.white }]}>
           <TouchableOpacity>
-            <Text style={[styles.btn_txt,{color:Colors.dark}]}>Sign up</Text>
+            <Text style={[defaultStyles.buttonText,{color:Colors.dark}]}>Sign up</Text>
           </TouchableOpacity>
         </Link>
       </View>
@@ -44,11 +44,7 @@ const Page = () => {
 export default Page
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
+
   video: {
     width: SCREEN_WIDTH,
     height: SCREEN_HEIGHT,
@@ -64,11 +60,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'red',
     flex: 1
   },
-  btn_txt: {
-    color: "#fff",
-    fontWeight: '500',
-    fontSize: 20
-  },
+
   buttons: {
     flexDirection: 'row',
     justifyContent: 'center',

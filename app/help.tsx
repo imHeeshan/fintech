@@ -1,11 +1,13 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { SafeAreaView, StatusBar, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import { defaultStyles } from '@/constants/Styles'
 
 const Page = () => {
   return (
-    <View>
-      <Text>Login</Text>
-    </View>
+    <SafeAreaView style={[{flex:1,backgroundColor:'red',alignItems:'center',justifyContent:'center'},defaultStyles.container]}>
+    
+      <Text>help</Text>
+    </SafeAreaView>
   )
 }
 
