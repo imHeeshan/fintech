@@ -8,7 +8,7 @@ import Colors from '@/constants/Colors'
 import { defaultStyles } from '@/constants/Styles'
 
 const Page = () => {
-  const [assets] = useAssets([require('@/assets/videos/intro.mp4')])
+  const [assets] = useAssets([require('@/assets/videos/intro.mp4')]);
   return (
     <View style={[defaultStyles.container,{justifyContent:'space-between'}]}>
       {assets && <Video

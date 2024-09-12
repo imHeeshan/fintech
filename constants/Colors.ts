@@ -6,5 +6,6 @@ export default {
   gray: '#626D77',
   lightGray: '#D8DCE2',
   white:'#fff',
-  lightBlue:'#6495ED'
+  lightBlue:'#6495ED',
+  blackBlur:"rgba(0, 0, 0, 0.05)"
 }

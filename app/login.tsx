@@ -1,9 +1,10 @@
-import { KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Alert, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import { defaultStyles } from '@/constants/Styles'
 import Colors from '@/constants/Colors'
-import { Link } from 'expo-router'
+import { Link, useRouter } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
+import { isClerkAPIResponseError, useSignIn } from '@clerk/clerk-expo'
 
 
 enum SignInType {
@@ -15,12 +16,34 @@ const Page = () => {
   const [mobileNumber, setMobileNumber] = useState('')
   const keyboardVerticalOffset = Platform.OS === 'ios' ? 80 : 0
   const keyboardbehavior = Platform.OS === 'ios' ? 'padding' : undefined
-
-
+  const { signIn } = useSignIn()
+  const router = useRouter()
 
   const handleOnSignIn = async (type: SignInType) => {
     if (type === SignInType.Phone) {
-
+      const fullMobileNum = `${countryCode}${mobileNumber}`
+      try {
+        const { supportedFirstFactors } = await signIn!.create({
+          identifier: fullMobileNum
+        });
+        const firstPhoneFactor: any = supportedFirstFactors?.find((factor: any) => {
+          return factor.strategy === 'phone_code'
+        })
+        const { phoneNumberId } = firstPhoneFactor;
+        router.push({ pathname: '/verify[phone]', params: { phone: fullMobileNum } });
+        await signIn!.prepareFirstFactor({
+          strategy: 'phone_code',
+          phoneNumberId
+        });
+        router.push({ pathname: '/verify[phone]', params: { phone: fullMobileNum, signin: 'true' } })
+      } catch (error) {
+        console.log('error', JSON.stringify(error, null, 2));
+        if (isClerkAPIResponseError(error)) {
+          if (error.errors[0].code === 'form_identifier_not_found') {
+            Alert.alert('Error', error.errors[0].message)
+          }
+        }
+      }
     }
   }
   return (
@@ -32,6 +55,7 @@ const Page = () => {
           <TextInput
             style={styles.input}
             value={countryCode}
+            onChangeText={setCountryCode}
           />
           <TextInput
             style={[styles.input, { flex: 1 }]}

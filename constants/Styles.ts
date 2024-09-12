@@ -33,4 +33,18 @@ export const defaultStyles = StyleSheet.create({
         fontSize: 18,
         fontWeight: '500',
     },
+    sectionHeader: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        margin: 20,
+        marginBottom: 10,
+    },
+    circle: {
+        width: 60,
+        height: 60,
+        backgroundColor: Colors.lightGray,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 30
+    },
 })
