@@ -7,10 +7,10 @@ import Dropdown from '@/components/Dropdown'
 import { useBalanceStore } from '@/store/balanceStore'
 import { Ionicons } from '@expo/vector-icons'
 import WidgetList from '@/components/SortableList/WidgetList'
-
+import { useHeaderHeight } from '@react-navigation/elements'
 const Page = () => {
+  const headerHeight = useHeaderHeight()
   const { balance, transactions, clearTransactions, runTransaction } = useBalanceStore()
-
   const handleAddMoney = () => {
     runTransaction({
       id: Math.random().toString(),
@@ -21,7 +21,9 @@ const Page = () => {
   }
 
   return (
-    <ScrollView style={{ backgroundColor: Colors.background }}>
+    <ScrollView style={{ backgroundColor: Colors.background }}
+      contentContainerStyle={{ paddingTop: headerHeight,paddingBottom:1000 }}
+    >
       <View style={styles.account}>
         <View style={styles.row}>
           <Text style={styles.balance}>{balance()}</Text>
@@ -45,8 +47,8 @@ const Page = () => {
               <View style={[defaultStyles.circle, { height: 40, width: 40 }]}>
                 <Ionicons name={transaction.amount < 0 ? "remove" : 'add'} size={24} />
               </View>
-              <View style={{flex:1}}>
-                <Text style={{fontWeight:'400'}}>{transaction.title}</Text>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontWeight: '400' }}>{transaction.title}</Text>
                 <Text style={{ color: Colors.gray, fontSize: 12 }}>{transaction.date.toLocaleString()}</Text>
               </View>
               <Text >{transaction.amount}€</Text>
@@ -55,7 +57,7 @@ const Page = () => {
         })}
       </View>
       <Text style={defaultStyles.sectionHeader}>Widgets</Text>
-      <WidgetList/>
+      <WidgetList />
     </ScrollView>
 
   )
@@ -79,7 +81,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   currency: {
-    fontSize: 28,
+    fontSize: 20,
     fontWeight: '600'
   },
   actionRow: {
@@ -89,16 +91,17 @@ const styles = StyleSheet.create({
   },
   transactions: {
     marginHorizontal: 20,
-    gap: 10,
-    marginBottom:10
+    gap: 20,
+    marginBottom: 10,
+    backgroundColor: Colors.white,
+    padding: 14,
+    borderRadius: 16,
   },
   transaction: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 16,
-    backgroundColor: Colors.white,
-    padding: 14,
-    borderRadius: 16,
+
   },
   emptyTxt: {
     color: Colors.gray,
