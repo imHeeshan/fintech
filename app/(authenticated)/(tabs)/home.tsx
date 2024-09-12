@@ -6,6 +6,7 @@ import RoundButton from '@/components/RoundButton'
 import Dropdown from '@/components/Dropdown'
 import { useBalanceStore } from '@/store/balanceStore'
 import { Ionicons } from '@expo/vector-icons'
+import WidgetList from '@/components/SortableList/WidgetList'
 
 const Page = () => {
   const { balance, transactions, clearTransactions, runTransaction } = useBalanceStore()
@@ -41,19 +42,20 @@ const Page = () => {
         {transactions.map((transaction) => {
           return (
             <View key={transaction.id} style={styles.transaction}>
-
               <View style={[defaultStyles.circle, { height: 40, width: 40 }]}>
                 <Ionicons name={transaction.amount < 0 ? "remove" : 'add'} size={24} />
               </View>
               <View style={{flex:1}}>
                 <Text style={{fontWeight:'400'}}>{transaction.title}</Text>
-                <Text style={{ color: Colors.gray, fontSize: 12 }}>{transaction.date.toLocaleDateString()}</Text>
+                <Text style={{ color: Colors.gray, fontSize: 12 }}>{transaction.date.toLocaleString()}</Text>
               </View>
-              <Text >{transaction.amount} €</Text>
+              <Text >{transaction.amount}€</Text>
             </View>
           )
         })}
       </View>
+      <Text style={defaultStyles.sectionHeader}>Widgets</Text>
+      <WidgetList/>
     </ScrollView>
 
   )
