@@ -12,7 +12,11 @@ import { ClerkProvider, useAuth } from '@clerk/clerk-expo';
 const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!
 import * as SecureStore from 'expo-secure-store'
 import { LogBox } from 'react-native';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { UserInactivityProvider } from '@/context/UserInactivity';
+import Loader from '@/components/Loader'
 
+const queryClient = new QueryClient()
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
@@ -48,30 +52,28 @@ const InitialLayout = () => {
   const { isLoaded, isSignedIn } = useAuth();
 
   const segments = useSegments();
+
   useEffect(() => {
-    if (loaded) {
+    if (loaded && isLoaded) {
       SplashScreen.hideAsync();
     }
-  }, [loaded]);
+  }, [loaded, isLoaded]);
   useEffect(() => {
-    console.log(isSignedIn);
-
     if (!isLoaded) return;
-    const inAuthGroup = segments[0] === '(authenticated)'
 
+    const inAuthGroup = segments[0] === '(authenticated)';
     if (isSignedIn && !inAuthGroup) {
-      router.replace('/(authenticated)/(tabs)/home');
+      router.replace('/(authenticated)/(tabs)/crypto');
+
     } else if (!isSignedIn) {
       router.replace('/');
     }
-  }, [isSignedIn])
+  }, [isSignedIn, isLoaded]);
 
   if (!loaded || !isLoaded) {
-    return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <ActivityIndicator size={'large'} color={Colors.lightBlue} />
-      </View>)
+    return <Loader />
   }
+
   return (
     <Stack>
       <Stack.Screen name='index' options={{ headerShown: false }} />
@@ -110,7 +112,12 @@ const InitialLayout = () => {
       />
       <Stack.Screen
         name="help"
-        options={{ title: 'Help', headerTitleAlign: 'center', presentation: 'modal', animation: 'slide_from_bottom' }}
+        options={{
+          title: 'Help',
+          headerTitleAlign: 'center',
+          presentation: 'modal',
+          animation: 'slide_from_bottom'
+        }}
       />
       <Stack.Screen name='verify/[phone]'
         options={{
@@ -120,7 +127,10 @@ const InitialLayout = () => {
           headerShadowVisible: false,
           headerLeft: () => (
             <TouchableOpacity onPress={router.back}>
-              <Ionicons name="chevron-back" size={26} color={Colors.dark} />
+              <Ionicons
+                name="chevron-back"
+                size={26}
+                color={Colors.dark} />
             </TouchableOpacity>
           )
         }}
@@ -129,20 +139,48 @@ const InitialLayout = () => {
         name="(authenticated)/(tabs)"
         options={{ headerShown: false }}
       />
+      <Stack.Screen
+        name="(authenticated)/crypto/[id]"
+        options={{
+          title: '',
+          // headerLeft: () => (
+          //   <TouchableOpacity onPress={router.back}>
+          //     <Ionicons name='chevron-back' size={24} color={Colors.dark} />
+          //   </TouchableOpacity>
+          // ),
+          headerTransparent: true,
+          headerStyle: { backgroundColor: Colors.background },
+          headerRight: () => (
+            <View style={{ flexDirection: 'row', gap: 10, alignItems: 'center' }}>
+              <TouchableOpacity>
+                <Ionicons name='notifications-outline' size={24} color={Colors.dark} />
+              </TouchableOpacity>
+              <TouchableOpacity>
+                <Ionicons name='star-outline' size={24} color={Colors.dark} />
+              </TouchableOpacity>
+            </View>
+          )
+        }}
+      />
+      <Stack.Screen name="(authenticated)/(modals)/lock" options={{ headerShown: false }} />
     </Stack>
   )
 }
 const RootLayotNav = () => {
   return (
     <ClerkProvider publishableKey={publishableKey!} tokenCache={tokenCache}>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <StatusBar style="light" />
-        <InitialLayout />
-      </GestureHandlerRootView>
+      <QueryClientProvider client={queryClient}>
+        <UserInactivityProvider>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <StatusBar style="light" />
+            <InitialLayout />
+          </GestureHandlerRootView>
+        </UserInactivityProvider>
+      </QueryClientProvider>
     </ClerkProvider>
   )
 }
 
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs();//Ignore all log notifications
-export default RootLayotNav
+export default RootLayotNav  

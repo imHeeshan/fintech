@@ -7,5 +7,7 @@ export default {
   lightGray: '#D8DCE2',
   white:'#fff',
   lightBlue:'#6495ED',
-  blackBlur:"rgba(0, 0, 0, 0.05)"
+  blackBlur:"rgba(0, 0, .5, .5)",
+  success:"#5cb85c",
+  danger:'#DD1712'
 }
