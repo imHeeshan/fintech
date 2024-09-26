@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { BlurView } from 'expo-blur'
 import { defaultStyles } from '@/constants/Styles'
@@ -12,24 +12,24 @@ const CustomHeader = () => {
         <BlurView
             intensity={50}
             style={{
-                backgroundColor: 'rgba(0, 0, 0, 0.05)',
+                backgroundColor: Platform.OS === 'ios' ? Colors.blackBlur : Colors.background,
                 paddingTop: top
             }}
             tint='extraLight'
-            experimentalBlurMethod='dimezisBlurView'
+
         >
             <View style={styles.container}>
-                <TouchableOpacity style={[defaultStyles.circle, styles.iconCircle, { backgroundColor: Colors.gray }]}>
+                <TouchableOpacity style={[defaultStyles.smallCircle, { backgroundColor: Colors.gray }]}>
                     <Text style={{ fontSize: 16, fontWeight: '500', color: Colors.white }}>MH</Text>
                 </TouchableOpacity>
                 <View style={styles.searchSection}>
                     <Ionicons name='search' size={20} style={styles.searchIcon} />
-                    <TextInput style={styles.input} placeholder='Search'/>
+                    <TextInput style={styles.input} placeholder='Search' />
                 </View>
-                <View style={[defaultStyles.circle, styles.iconCircle]}>
+                <View style={[defaultStyles.smallCircle]}>
                     <Ionicons name='stats-chart' size={20} color={Colors.dark} />
                 </View>
-                <View style={[defaultStyles.circle, styles.iconCircle]}>
+                <View style={[defaultStyles.smallCircle]}>
                     <Ionicons name='card' size={20} color={Colors.dark} />
                 </View>
             </View>
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     input: {
         flex: 1,
         // paddingVertical: 10,
-        color:Colors.dark
+        color: Colors.dark
     },
     searchIcon: {
         padding: 10

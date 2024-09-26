@@ -1,26 +1,29 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Platform, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { Tabs } from 'expo-router'
 import { Entypo, FontAwesome } from '@expo/vector-icons'
 import Colors from '@/constants/Colors'
 import { BlurView } from 'expo-blur'
 import CustomHeader from '@/components/CustomHeader'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
-const Layout = () => {
+export default function TabLayout() {
+    const insets = useSafeAreaInsets()
+    const tabBarHeight = 60 + insets.bottom;
+
     return (
         <Tabs
             screenOptions={{
                 tabBarActiveTintColor: Colors.lightBlue,
-
                 tabBarBackground: () =>
                     <BlurView
                         intensity={50}
                         style={{
-                            backgroundColor: 'rgba(0, 0, 0, 0.05)',
-                            flex: 1
+                            backgroundColor: Platform.OS === 'ios' ? Colors.blackBlur : Colors.background,
+                            height: tabBarHeight
                         }}
                         tint='extraLight'
-                        experimentalBlurMethod='dimezisBlurView'
+
                     />,
                 tabBarStyle: {
                     backgroundColor: 'transparent',
@@ -33,7 +36,6 @@ const Layout = () => {
 
                 }
             }}
-
         >
             <Tabs.Screen name='home'
                 options={{
@@ -59,7 +61,10 @@ const Layout = () => {
                 options={{
                     title: "Crypto",
                     tabBarIcon: ({ size, color }) =>
-                        <FontAwesome name='bitcoin' size={size} color={color} />
+                        <FontAwesome name='bitcoin' size={size} color={color} />,
+                    header: () => <CustomHeader />,
+                    headerTransparent: true,
+                    // headerShown: false
                 }} />
             <Tabs.Screen name='lifestyle'
                 options={{
@@ -71,6 +76,5 @@ const Layout = () => {
     )
 }
 
-export default Layout
 
 const styles = StyleSheet.create({})

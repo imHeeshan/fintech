@@ -1,6 +1,13 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, ViewStyle } from "react-native";
 import Colors from "./Colors";
 
+const circle: ViewStyle = {
+
+    backgroundColor: Colors.lightGray,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 30,
+};
 export const defaultStyles = StyleSheet.create({
     container: {
         flex: 1,
@@ -14,6 +21,14 @@ export const defaultStyles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    pillButtonSmall: {
+        paddingHorizontal: 20,
+        height: 40,
+        borderRadius: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection:'row'
+      },
     headerText: {
         fontSize: 40,
         fontWeight: '700',
@@ -42,9 +57,24 @@ export const defaultStyles = StyleSheet.create({
     circle: {
         width: 60,
         height: 60,
-        backgroundColor: Colors.lightGray,
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 30
+        ...circle,
     },
+    smallCircle: {
+        width: 40,
+        height: 40,
+        ...circle,
+    },
+    sectionBlock: {
+        marginHorizontal: 20,
+        padding: 14,
+        backgroundColor: '#fff',
+        borderRadius: 16,
+        gap: 20,
+    },
+    subTitle: {
+        color:Colors.gray,
+        fontWeight:'600',
+        fontSize:20,
+        // margin: 14,
+    }
 })

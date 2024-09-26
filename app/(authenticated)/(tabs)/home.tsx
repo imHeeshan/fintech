@@ -8,25 +8,38 @@ import { useBalanceStore } from '@/store/balanceStore'
 import { Ionicons } from '@expo/vector-icons'
 import WidgetList from '@/components/SortableList/WidgetList'
 import { useHeaderHeight } from '@react-navigation/elements'
+import Loader from '@/components/Loader'
 const Page = () => {
   const headerHeight = useHeaderHeight()
-  const { balance, transactions, clearTransactions, runTransaction } = useBalanceStore()
+ 
+  // Using selectors for specific state pieces
+  const balance = useBalanceStore((state) => state.balance);
+  const transactions = useBalanceStore((state) => state.transactions);
+  const clearTransactions = useBalanceStore((state) => state.clearTransactions);
+  const runTransaction = useBalanceStore((state) => state.runTransaction);
+
   const handleAddMoney = () => {
     runTransaction({
       id: Math.random().toString(),
-      amount: Math.floor(Math.random() * 1000) * (Math.random() > .5 ? 1 : -1),
+      amount: Math.floor(Math.random() * 1000) * (Math.random() > 0.5 ? 1 : -1),
       date: new Date(),
-      title: 'Added money'
-    })
-  }
+      title: 'Added money',
+    });
+  };
+
+  console.log('Rendering Home Screen');
 
   return (
-    <ScrollView style={{ backgroundColor: Colors.background }}
-      contentContainerStyle={{ paddingTop: headerHeight,paddingBottom:1000 }}
+    // <View style={[{ backgroundColor: 'lightblue', flex: 1, alignItems: 'center', justifyContent: 'center' }]}>
+    //     <Loader />
+    // </View>
+    <ScrollView style={{ backgroundColor: Colors.background, }}
+      contentContainerStyle={{ paddingTop: headerHeight }}
     >
+
       <View style={styles.account}>
         <View style={styles.row}>
-          <Text style={styles.balance}>{balance()}</Text>
+          <Text style={styles.balance}>{balance}</Text>
           <Text style={styles.currency}>€</Text>
         </View>
       </View>
@@ -44,7 +57,7 @@ const Page = () => {
         {transactions.map((transaction) => {
           return (
             <View key={transaction.id} style={styles.transaction}>
-              <View style={[defaultStyles.circle, { height: 40, width: 40 }]}>
+              <View style={[defaultStyles.smallCircle]}>
                 <Ionicons name={transaction.amount < 0 ? "remove" : 'add'} size={24} />
               </View>
               <View style={{ flex: 1 }}>
