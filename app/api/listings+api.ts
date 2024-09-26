@@ -4,9 +4,13 @@ const API_KEY = process.env.CRYPTO_API_KEY
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
-  const page = url.searchParams.get('page')
-  console.log("pageeee",page);
-  
+  const page = Number(url.searchParams.get('page'))
+  const limit = 10
+  console.log(page);
+
+  const startIndex = (page - 1) * limit;
+  const paginatedData = data.slice(startIndex, startIndex + limit);
+
   // const limit = url.searchParams.get('limit') || '5';
 
   // const response = await fetch(
@@ -20,7 +24,8 @@ export async function GET(request: Request) {
 
   // const res = await response.json();
   // return Response.json(res.data);
-  return Response.json(data);
+
+  return Response.json(paginatedData);
 }
 
 const data = [

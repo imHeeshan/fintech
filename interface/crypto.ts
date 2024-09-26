@@ -75,8 +75,8 @@ export interface Currency {
   slug: string;
   subreddit: string;
   symbol: string;
-  'tag-groups': any[];
-  'tag-names': any[];
+  tag_groups: any[];
+  tag_names: any[];
   tags: any[];
   twitter_username: string;
 

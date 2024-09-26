@@ -61,8 +61,11 @@ const InitialLayout = () => {
   useEffect(() => {
     if (!isLoaded) return;
 
+    console.log(isSignedIn,"out");
     const inAuthGroup = segments[0] === '(authenticated)';
     if (isSignedIn && !inAuthGroup) {
+      console.log(isSignedIn);
+      
       router.replace('/(authenticated)/(tabs)/crypto');
 
     } else if (!isSignedIn) {
@@ -143,11 +146,11 @@ const InitialLayout = () => {
         name="(authenticated)/crypto/[id]"
         options={{
           title: '',
-          // headerLeft: () => (
-          //   <TouchableOpacity onPress={router.back}>
-          //     <Ionicons name='chevron-back' size={24} color={Colors.dark} />
-          //   </TouchableOpacity>
-          // ),
+          headerLeft: () => (
+            <TouchableOpacity onPress={router.back}>
+              <Ionicons name='chevron-back' size={24} color={Colors.dark} />
+            </TouchableOpacity>
+          ),
           headerTransparent: true,
           headerStyle: { backgroundColor: Colors.background },
           headerRight: () => (

@@ -42,6 +42,9 @@ const Page = () => {
       console.error(error);
     }
   };
+useEffect(() => {
+  handleAuthentication()
+}, [])
 
   return (
     <View style={styles.container}>
