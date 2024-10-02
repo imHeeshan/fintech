@@ -53,10 +53,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     ball: {
-        height: 30,
-        width: 30,
+        height: 25,
+        width: 25,
         backgroundColor: Colors.primaryMuted,
-        borderRadius: 30,
+        borderRadius: 25,
         shadowColor: '#FFFFF0',
         shadowOffset: {
             width: 2,

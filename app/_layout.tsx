@@ -61,11 +61,11 @@ const InitialLayout = () => {
   useEffect(() => {
     if (!isLoaded) return;
 
-    console.log(isSignedIn,"out");
+    console.log(isSignedIn, "out");
     const inAuthGroup = segments[0] === '(authenticated)';
     if (isSignedIn && !inAuthGroup) {
       console.log(isSignedIn);
-      
+
       router.replace('/(authenticated)/(tabs)/crypto');
 
     } else if (!isSignedIn) {
@@ -143,7 +143,7 @@ const InitialLayout = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="(authenticated)/crypto/[id]"
+        name="(authenticated)/crypto/cryptoDetails/[id]"
         options={{
           title: '',
           headerLeft: () => (

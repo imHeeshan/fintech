@@ -57,27 +57,27 @@ export interface Ticker {
 }
 
 export interface Currency {
-  category: string;
-  contract_address: any[];
-  date_added: string;
-  date_launched: string;
-  description: string;
-  id: number;
-  infinite_supply: boolean;
-  is_hidden: number;
-  logo: string;
-  name: string;
-  notice: string;
-  platform: null;
-  self_reported_circulating_supply: null;
-  self_reported_market_cap: null;
-  self_reported_tags: null;
-  slug: string;
-  subreddit: string;
-  symbol: string;
-  tag_groups: any[];
-  tag_names: any[];
-  tags: any[];
-  twitter_username: string;
-
+  id?: number;
+  name?: string;
+  symbol?: string;
+  category?: string;
+  description?: string;
+  slug?: string;
+  logo?: string;
+  subreddit?: string;
+  notice?: string;
+  tag_names?: any[];
+  tag_groups?: any[];
+  urls?: {},
+  platform?: null;
+  date_added?: string;
+  contract_address?: any[];
+  date_launched?: string;
+  infinite_supply?: boolean;
+  is_hidden?: number;
+  self_reported_circulating_supply?: null;
+  self_reported_market_cap?: null;
+  self_reported_tags?: null;
+  tags?: any[];
+  twitter_username?: string;
 }
