@@ -85343,6 +85343,7 @@ export const tickers = [
     }
 ];
 
+
 export const listings =
 
     [
@@ -90354,10 +90355,8 @@ export const listings =
             }
         }
 ]
-type tCurrency = {
-    [key: string]: Currency;
-  };
-export const currencyInfo:tCurrency = {
+
+export const currencyInfo:Currency = {
   '1': {
     id: 1,
     name: 'Bitcoin',

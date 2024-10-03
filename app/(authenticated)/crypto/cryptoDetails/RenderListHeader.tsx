@@ -15,7 +15,7 @@ const RenderListHeader = ({ data }: any) => {
                 marginHorizontal: 16
             }}>
                 <Text style={defaultStyles.subTitle}>{data?.symbol}</Text>
-                <Image source={{ uri: data?.logo }} style={{ width: 50, height: 50 }} />
+                <Image source={{ uri: data?.logo }} style={{ width: 40, height: 40,borderRadius:40 }} />
             </View>
             <View style={{ flexDirection: 'row', gap: 16, margin: 12 }}>
                 <TouchableOpacity style={[defaultStyles.pillButtonSmall, { backgroundColor: Colors.primary, }]}>

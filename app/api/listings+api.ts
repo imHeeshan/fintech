@@ -7,9 +7,10 @@ export async function GET(request: Request) {
   const url = new URL(request.url);
   const page = Number(url.searchParams.get('page'))
   const limit = Number(url.searchParams.get('limit')) | 10
+  const initialLimit = 30;
+  const subsequentLimit = 10;
 
-  const startIndex = (page - 1) * limit;
-  console.log(startIndex,"strat");
+  const startIndex = page === 1 ? 0 : initialLimit + (page - 2) * subsequentLimit;
   
   const paginatedData = listings.slice(startIndex, startIndex + limit);
 

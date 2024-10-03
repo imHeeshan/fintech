@@ -76,5 +76,9 @@ export const defaultStyles = StyleSheet.create({
         fontWeight:'600',
         fontSize:20,
         // margin: 14,
-    }
+    },
+    emptyTxt: {
+        color: Colors.gray,
+        padding: 14, fontWeight: '400'
+      }
 })

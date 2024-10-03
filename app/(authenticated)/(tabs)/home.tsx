@@ -52,7 +52,7 @@ const Page = () => {
       <Text style={defaultStyles.sectionHeader}>Transactions</Text>
       <View style={styles.transactions}>
         {transactions.length === 0 &&
-          (<Text style={styles.emptyTxt}>No transaction yet</Text>)
+          (<Text style={defaultStyles.emptyTxt}>No transaction yet</Text>)
         }
         {transactions.map((transaction) => {
           return (
@@ -116,9 +116,5 @@ const styles = StyleSheet.create({
     gap: 16,
 
   },
-  emptyTxt: {
-    color: Colors.gray,
-    padding: 14, fontWeight: '400'
-  }
-
+  
 })

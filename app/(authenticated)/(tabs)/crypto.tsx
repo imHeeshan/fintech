@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Alert, Dimensions, NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
+import React, { useEffect, useRef, useState } from "react";
+import { ActivityIndicator, Alert, Dimensions, NativeScrollEvent, NativeSyntheticEvent, RefreshControl } from 'react-native';
 import { TabView, TabBar, SceneRendererProps } from 'react-native-tab-view';
 import Colors from "@/constants/Colors";
 import { Currency, ICurrency } from "@/interface/crypto";
@@ -9,18 +9,20 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useHeaderHeight } from '@react-navigation/elements'
 import TabRoute from "../crypto/TabRoute";
 import { currencyFilter } from "@/constants/ReusableFn";
+import Loader from "@/components/Loader";
+import { useNavigation, useRouter, useSegments } from "expo-router";
 
 
 const Page = () => {
   const headerHeight = useHeaderHeight()
   const insets = useSafeAreaInsets()
-  const tabBarHeight = insets.bottom + 60;
   const [currentPage, setCurrentPage] = useState(1);
   const [paginationData, setPaginationData] = useState<ICurrency[]>([]);
   const [currencyDetails, setCurrencyDetails] = useState<Currency>({})
   const [index, setIndex] = useState(0);
   const [limit, setLimit] = useState(30)
   const [refreshing, setRefreshing] = useState(false);
+
 
   const { data: currencies, isFetching } = useQuery({
     queryKey: ['currencies', currentPage, limit],
@@ -39,19 +41,23 @@ const Page = () => {
 
   const uniqueIds = [...new Set(allIds)].join(',');
   useEffect(() => {
-    if (currencies) {
-      setPaginationData((prevData) => [...prevData, ...currencies]);
-      setRefreshing(false)
-      // setPaginationData((prevData) => {
-      //   // Filter out items that are already in the paginationData
-      //   const newData = currencies.filter((currency) =>
-      //     !prevData.find((item) => item.id === currency.id) // Assuming `id` is the unique key
-      //   );
-      //   return [...prevData, ...newData];
-      // });
+if(refreshing){
+  setPaginationData([])
+
+}
+    if (currencies?.length > 0) {
+      setPaginationData((prevData) => {
+        const newData = currencies.filter(
+          (currency: { id: number; }) => !prevData.some((item) => item.id === currency.id) // Avoid duplicates
+        );
+        return [...prevData, ...newData];
+      });
     }
 
   }, [currencies, refreshing]);
+  useEffect(() => {
+    setRefreshing(false)
+  }, [refreshing])
 
   const { data: currencyInfo, isFetching: isLogoFetching } = useQuery({
     queryKey: ['currencyInfo', uniqueIds],
@@ -84,14 +90,13 @@ const Page = () => {
     const isCloseToBottom =
       nativeEvent.layoutMeasurement.height + nativeEvent.contentOffset.y >=
       nativeEvent.contentSize.height - 20;
-    if (isCloseToBottom && !isFetching && !isLogoFetching) {
+    if (isCloseToBottom && !isFetching && !isLogoFetching && currentPage < 9) {
       loadMoreItem();
     }
   };
   const handlePullRefresh = async () => {
-    setLimit(30)
-    setPaginationData([])
     setRefreshing(true)
+    setLimit(30)
     setCurrentPage(1)
   }
   type Route = {
@@ -107,6 +112,7 @@ const Page = () => {
     { key: 'gainer', title: 'Gainers' },
     { key: 'losers', title: 'Losers' },
   ]);
+
   const renderScene = ({ route }: { route: Route }) => {
     switch (route.key) {
       case 'all':
@@ -115,6 +121,8 @@ const Page = () => {
           handleScroll={handleScroll}
           handlePullRefresh={handlePullRefresh}
           refreshing={refreshing}
+          isFetching={isFetching}
+
         />;
       case 'gainer':
         return <TabRoute
@@ -143,9 +151,20 @@ const Page = () => {
       )}
     />
   );
+  const currencyDetailsLength = Object.keys(currencyDetails).length
+
+  if (currencyDetailsLength === 0 && !refreshing) {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <ActivityIndicator size={'large'} color={Colors.primaryMuted} />
+      </View>
+    )
+  }
+
   return (
     <View style={{ paddingTop: headerHeight, flex: 1, paddingHorizontal: 10 }}>
-      <Text>{refreshing.toString()} {currentPage} {paginationData.length}</Text>
+      <Text>{currencies?.length}</Text>
+      <Text>{paginationData?.length} {currentPage}</Text>
       <TabView
         navigationState={{ index, routes }}
         renderScene={renderScene}

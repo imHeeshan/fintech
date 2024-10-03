@@ -49,35 +49,51 @@ interface Platform {
 }
 
 
-export interface Ticker {
-  timestamp: string;
-  price: number;
-  volume_24h: number;
-  market_cap: number;
-}
 
 export interface Currency {
-  id?: number;
-  name?: string;
-  symbol?: string;
-  category?: string;
-  description?: string;
-  slug?: string;
-  logo?: string;
-  subreddit?: string;
-  notice?: string;
-  tag_names?: any[];
-  tag_groups?: any[];
-  urls?: {},
-  platform?: null;
-  date_added?: string;
-  contract_address?: any[];
-  date_launched?: string;
-  infinite_supply?: boolean;
-  is_hidden?: number;
-  self_reported_circulating_supply?: null;
-  self_reported_market_cap?: null;
-  self_reported_tags?: null;
-  tags?: any[];
-  twitter_username?: string;
+  [key: number]: {
+    id?: number;
+    name?: string;
+    symbol?: string;
+    category?: string;
+    description?: string;
+    slug?: string;
+    logo?: string;
+    subreddit?: string;
+    notice?: string;
+    tag_names?: any[];
+    tag_groups?: any[];
+    urls?: {},
+    platform?: null;
+    date_added?: string;
+    contract_address?: any[];
+    date_launched?: string;
+    infinite_supply?: boolean;
+    is_hidden?: number;
+    self_reported_circulating_supply?: null;
+    self_reported_market_cap?: null;
+    self_reported_tags?: null;
+    tags?: any[];
+    twitter_username?: string;
+  }
+
+}
+export interface  ITickerHistory {
+  timeOpen: string;
+  timeClose: string;
+  timeHigh: string;
+  timeLow: string;
+  name: number;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
+  marketCap: number;
+  timestamp: string;
+}
+
+export interface Ticker {
+  symbol: string;
+  history: ITickerHistory[];
 }

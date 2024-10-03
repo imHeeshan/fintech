@@ -12,7 +12,7 @@ import * as Haptics from 'expo-haptics'
 import Animated, { SharedValue, useAnimatedProps } from 'react-native-reanimated'
 import RenderSectionHeader from './RenderSectionHeader'
 import RenderListHeader from './RenderListHeader'
-import Loader from '@/components/Loader'
+import { formatPriceFn } from '@/constants/ReusableFn'
 
 
 const categories = ['Overview', 'News', 'Orders', 'Transactions',];
@@ -26,7 +26,7 @@ const Page = () => {
     const { id } = useLocalSearchParams()
     const [activeIndex, setIndex] = useState(0)
     const headerHeight = useHeaderHeight()
-    const font = useFont(require('@/assets/fonts/SpaceMono-Regular.ttf'), 12)
+    const font = useFont(require('@/assets/fonts/SpaceMono-Regular.ttf'), 10)
     const [isLoading, setIsLoading] = useState(false)
     const { state, isActive } = useChartPressState({ x: 0, y: { volume: 0 } });
     useEffect(() => {
@@ -50,8 +50,6 @@ const Page = () => {
             setSymbol(currencyInfo?.symbol)
         }
     }, [currencyInfo])
-    console.log(currencyInfo?.symbol, "currencyInfo?.symbolcurrencyInfo?.symbol");
-    console.log(symbol, "ccccccccccccccccurnncyy infor suuuuu");
 
     const { data: tickers } = useQuery({
         queryKey: ['tickers', currencyInfo],
@@ -104,7 +102,7 @@ const Page = () => {
                 renderItem={() => {
                     const pointWidth = 3; // Width per data point
 
-                    const chartWidth = tickers.length * pointWidth; // Dynamically calculate chart width
+                    const chartWidth = tickers?.length * pointWidth;
                     return (
                         <View style={{ flex: 1, }}>
                             <View style={[defaultStyles.sectionBlock, { marginTop: 20, height: 450, }]}>
@@ -134,38 +132,36 @@ const Page = () => {
                                                 />
                                             </View>}
                                         <View style={{ flex: 1 }}>
-                                            <ScrollView
-                                                showsHorizontalScrollIndicator={false}
-                                                horizontal={true} contentContainerStyle={{ width: chartWidth }}>
+                                            <CartesianChart
+                                                axisOptions={{
+                                                    font,
+                                                    tickCount: 8,
+                                                    labelOffset: { x: -2, y: 0 },
+                                                    formatYLabel: (v) => {
+                                                        const formatPrice = formatPriceFn(v)
+                                                        return `${formatPrice} € `
+                                                    },
+                                                    formatXLabel: (ms) => format(new Date(ms), 'MM/yy')
+                                                }}
+                                                chartPressState={state}
+                                                data={tickers!} xKey="timestamp" yKeys={["volume"]}>
+                                                {({ points }) => (
+                                                    <>
+                                                        <Line points={points.volume} color={Colors.primary} strokeWidth={3} />
+                                                        {isActive && (
+                                                            <ToolTip x={state.x.position} y={state.y.volume.position} />
+                                                        )}
+                                                    </>
+                                                )}
+                                            </CartesianChart>
 
-                                                <CartesianChart
-                                                    axisOptions={{
-                                                        font,
-                                                        tickCount: 8,
-                                                        labelOffset: { x: -2, y: 0 },
-                                                        formatYLabel: (v) => `${v} € `,
-                                                        formatXLabel: (ms) => format(new Date(ms), 'MM/yy')
-
-                                                    }}
-                                                    chartPressState={state}
-                                                    data={tickers!} xKey="timestamp" yKeys={["volume"]}>
-                                                    {({ points }) => (
-                                                        <>
-                                                            <Line points={points.volume} color={Colors.primary} strokeWidth={3} />
-                                                            {isActive && (
-                                                                <ToolTip x={state.x.position} y={state.y.volume.position} />
-                                                            )}
-                                                        </>
-                                                    )}
-                                                </CartesianChart>
-                                            </ScrollView>
                                         </View>
 
                                     </>}
                             </View>
                             <View style={[defaultStyles.sectionBlock, { marginVertical: 20, }]}>
                                 <Text style={[{ color: Colors.gray }, defaultStyles.subTitle]}>Overview </Text>
-                                <Text style={{ color: Colors.gray }}>{currencyInfo?.description} </Text>
+                                <Text style={{ color: Colors.gray ,lineHeight:18}}>{currencyInfo?.description} </Text>
                             </View>
                         </View>
                     )
