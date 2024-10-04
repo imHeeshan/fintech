@@ -99,6 +99,7 @@ export interface Ticker {
 }
 
 export interface INewsArticle {
+  id:number,
   source: {
     id: string | null;
     name: string;

@@ -92864,6 +92864,7 @@ export const currncyNews = {
     "totalResults": 6996,
     "articles": [
         {
+            "id":1,
             "source": {
                 "id": "wired",
                 "name": "Wired"
@@ -92877,6 +92878,7 @@ export const currncyNews = {
             "content": "The previous October, Sawicky organized a weeklong protest alongside environmental activist group Greenpeace and brandished various anti-bitcoin signs at anyone who entered the Riot facility. Only a … [+3641 chars]"
         },
         {
+            "id":2,
             "source": {
                 "id": null,
                 "name": "CNET"
@@ -92890,6 +92892,7 @@ export const currncyNews = {
             "content": "It's about to get easier for US merchants to use cryptocurrency for payments. PayPal is launching a new service to allow the businesses that use its platform to buy, hold and sell crypto. \r\nAlthough … [+1029 chars]"
         },
         {
+            "id":3,
             "source": {
                 "id": null,
                 "name": "[Removed]"
@@ -92903,6 +92906,7 @@ export const currncyNews = {
             "content": "[Removed]"
         },
         {
+            "id":4,
             "source": {
                 "id": null,
                 "name": "Slashdot.org"
@@ -92916,6 +92920,7 @@ export const currncyNews = {
             "content": "The government of Bhutan is currently holding over $828 million in bitcoin, according to onchain data by Arkham Intelligence. From a report: \"Unlike most governments, Bhutan's BTC does not come from … [+1208 chars]"
         },
         {
+            "id":5,
             "source": {
                 "id": null,
                 "name": "Gizmodo.com"
@@ -92929,6 +92934,7 @@ export const currncyNews = {
             "content": "Balaji Srinivasan, the former chief technology officer of Coinbase, is a weird guy. He’s talked about living forever. He helped finance a pro-steroids athletic competition. And he once threw away a m… [+3090 chars]"
         },
         {
+            "id":6,
             "source": {
                 "id": "wired",
                 "name": "Wired"
@@ -92942,6 +92948,7 @@ export const currncyNews = {
             "content": "Celebrities partnering with watch brands is nothing new. Sometimes a bona fide watch enthusiast like John Mayer partners with Audemars Piguet, or Ed Sheeran (owner of a unique Patek Philippe, no less… [+2694 chars]"
         },
         {
+            "id":7,
             "source": {
                 "id": null,
                 "name": "Gizmodo.com"
@@ -92955,6 +92962,7 @@ export const currncyNews = {
             "content": "Cryptocurrency mining is stressing the Texas power grid and causing “unexplained health problems,” for residents of some small towns in the state, according to a new report from the San Antonio Expre… [+4312 chars]"
         },
         {
+            "id":8,
             "source": {
                 "id": null,
                 "name": "Gizmodo.com"
@@ -92968,6 +92976,7 @@ export const currncyNews = {
             "content": "Just starting out with stock trading can be an overwhelming experience. Knowing what stocks are good and bad and knowing when to buy or sell doesn’t come naturally. You can work with a financial advi… [+2251 chars]"
         },
         {
+            "id":99,
             "source": {
                 "id": "time",
                 "name": "Time"
@@ -92981,6 +92990,7 @@ export const currncyNews = {
             "content": "The scene inside Bathhouse, a spa in Manhattan, is one of complete serenity. Visitors recline in 105-degree pools, surrounded by cedar tiles and elegant marble slabs from Brazil. But just beyond clos… [+7823 chars]"
         },
         {
+            "id":10,
             "source": {
                 "id": null,
                 "name": "Yahoo Entertainment"

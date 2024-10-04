@@ -6,11 +6,14 @@ import { format } from 'date-fns';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '@/constants/Colors';
 import { NormalLoader } from '@/components/Loader';
+import { useNewsBookmarkStore } from '@/store/newsBookmarkStore';
 interface NewsSectionProps {
   data: INewsArticle[];
 }
 const RenderNewsSection = ({ data }: NewsSectionProps) => {
-  console.log(data);
+  const bookmarks = useNewsBookmarkStore((state) => state.bookmarks);
+  const addBookmark = useNewsBookmarkStore((state) => state.addBookmark);
+  const isBookmarked = (id: number) => bookmarks.some((b) => b.id === id);
 
   if (data == undefined) {
     return <NormalLoader />
@@ -28,8 +31,8 @@ const RenderNewsSection = ({ data }: NewsSectionProps) => {
                 <View style={[defaultStyles.flexRowView, { gap: 3 }]}>
                   <Text numberOfLines={1}
                     style={[defaultStyles.smallTitleTxt, { color: Colors.dark, flex: 1 }]}>{news.title}</Text>
-                  <TouchableOpacity>
-                    <Ionicons name='bookmark-outline' size={16} />
+                  <TouchableOpacity onPress={() => addBookmark({ id: news.id })}>
+                    <Ionicons name={`${isBookmarked(news?.id)?'bookmark':'bookmark-outline'}`} size={20} />
                   </TouchableOpacity>
                 </View>
                 <Text numberOfLines={2} style={defaultStyles.smallSubTxt}>{news.description}</Text>
