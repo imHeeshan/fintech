@@ -14,7 +14,7 @@ import * as SecureStore from 'expo-secure-store'
 import { LogBox } from 'react-native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { UserInactivityProvider } from '@/context/UserInactivity';
-import Loader from '@/components/Loader'
+import { AnimatedLoader } from '@/components/Loader';
 
 const queryClient = new QueryClient()
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -74,7 +74,7 @@ const InitialLayout = () => {
   }, [isSignedIn, isLoaded]);
 
   if (!loaded || !isLoaded) {
-    return <Loader />
+    return <AnimatedLoader/>
   }
 
   return (

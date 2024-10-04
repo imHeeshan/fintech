@@ -31,8 +31,8 @@ const Page = () => {
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={keyboardbehavior} keyboardVerticalOffset={keyboardVerticalOffset}>
       <View style={defaultStyles.container}>
-        <Text style={[defaultStyles.headerText, {}]}>Let's get started!</Text>
-        <Text style={[defaultStyles.descriptionText, {}]}>Enter your mobile number.we will send confirmation number.</Text>
+        <Text style={[defaultStyles.headerTxt, {}]}>Let's get started!</Text>
+        <Text style={[defaultStyles.descriptionTxt, {}]}>Enter your mobile number.we will send confirmation number.</Text>
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
@@ -51,7 +51,7 @@ const Page = () => {
         </View>
         <Link href={'/login'} asChild replace>
           <TouchableOpacity>
-            <Text style={[defaultStyles.linkText,]}>Already have an account? Login </Text>
+            <Text style={[defaultStyles.linkTxt,]}>Already have an account? Login </Text>
           </TouchableOpacity>
         </Link>
         <View style={{ flex: 1 }} />
@@ -59,7 +59,7 @@ const Page = () => {
           disabled={mobileNumber !== '' ? false : true}
           onPress={handleSignUp}
           style={[defaultStyles.pillButton, { backgroundColor: mobileNumber !== '' ? Colors.primary : Colors.primaryMuted, }]}>
-          <Text style={defaultStyles.buttonText}>Sign Up</Text>
+          <Text style={defaultStyles.buttonTxt}>Sign Up</Text>
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>

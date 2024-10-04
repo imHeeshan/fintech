@@ -5,9 +5,9 @@ import Colors from '@/constants/Colors'
 type props = {
     categories: string[],
     activeIndex: number,
-    setIndex: (index: number) => void
+    setActiveIndex: (index: number) => void
 }
-const RenderSectionHeader = ({ categories, activeIndex, setIndex }: props) => {
+const RenderSectionHeader = ({ categories, activeIndex, setActiveIndex }: props) => {
     return (
         <ScrollView
             horizontal
@@ -26,7 +26,7 @@ const RenderSectionHeader = ({ categories, activeIndex, setIndex }: props) => {
             {categories.map((category, index) =>
             (
                 <TouchableOpacity
-                    onPress={() => setIndex(index)}
+                    onPress={() => setActiveIndex(index)}
                     style={
                         activeIndex === index ? [styles.categoriesBtn, styles.categoriesBtnActive] : styles.categoriesBtn}
                     key={index}>

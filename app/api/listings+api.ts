@@ -7,11 +7,17 @@ export async function GET(request: Request) {
   const url = new URL(request.url);
   const page = Number(url.searchParams.get('page'))
   const limit = Number(url.searchParams.get('limit')) | 10
+  const id = Number(url.searchParams.get('id')) | 0
   const initialLimit = 30;
   const subsequentLimit = 10;
-
-  const startIndex = page === 1 ? 0 : initialLimit + (page - 2) * subsequentLimit;
+  console.log(id,"idddddds nes");
   
+  if (id !== 0) {
+    const findList = listings.find(crypto => crypto.id === id);
+    return Response.json(findList);
+
+  }
+  const startIndex = page === 1 ? 0 : initialLimit + (page - 2) * subsequentLimit;
   const paginatedData = listings.slice(startIndex, startIndex + limit);
 
   // const limit = url.searchParams.get('limit') || '5';

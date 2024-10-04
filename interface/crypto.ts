@@ -78,7 +78,7 @@ export interface Currency {
   }
 
 }
-export interface  ITickerHistory {
+export interface ITickerHistory {
   timeOpen: string;
   timeClose: string;
   timeHigh: string;
@@ -96,4 +96,18 @@ export interface  ITickerHistory {
 export interface Ticker {
   symbol: string;
   history: ITickerHistory[];
+}
+
+export interface INewsArticle {
+  source: {
+    id: string | null;
+    name: string;
+  };
+  author: string | null;
+  title: string;
+  description: string;
+  url: string;
+  urlToImage?: string | null;
+  publishedAt: string;
+  content: string | null;
 }

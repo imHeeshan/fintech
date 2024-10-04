@@ -9,8 +9,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useHeaderHeight } from '@react-navigation/elements'
 import TabRoute from "../crypto/TabRoute";
 import { currencyFilter } from "@/constants/ReusableFn";
-import Loader from "@/components/Loader";
 import { useNavigation, useRouter, useSegments } from "expo-router";
+import {  NormalLoader } from "@/components/Loader";
 
 
 const Page = () => {
@@ -154,17 +154,11 @@ if(refreshing){
   const currencyDetailsLength = Object.keys(currencyDetails).length
 
   if (currencyDetailsLength === 0 && !refreshing) {
-    return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <ActivityIndicator size={'large'} color={Colors.primaryMuted} />
-      </View>
-    )
-  }
+    return <NormalLoader/>
+   }
 
   return (
     <View style={{ paddingTop: headerHeight, flex: 1, paddingHorizontal: 10 }}>
-      <Text>{currencies?.length}</Text>
-      <Text>{paginationData?.length} {currentPage}</Text>
       <TabView
         navigationState={{ index, routes }}
         renderScene={renderScene}

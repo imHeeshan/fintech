@@ -5,6 +5,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import Colors from '@/constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
 import { Currency, ICurrency } from '@/interface/crypto';
+import CurrencyPercentage from './CurrencyPercentage';
 
 
 type renderProps = {
@@ -12,7 +13,7 @@ type renderProps = {
   currencyDetails: Currency
 }
 const RenderCurrencyList = ({ currency, currencyDetails }: renderProps) => {
-  const checkPercentageValue = currency.quote.EUR.percent_change_1h > 0
+  const checkPercentageValue = currency.quote.EUR.percent_change_1h
   return (
     <Link href={`/crypto/cryptoDetails/${currency.id}`} asChild key={currency.id}>
       <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', gap: 14 }}>
@@ -23,10 +24,7 @@ const RenderCurrencyList = ({ currency, currencyDetails }: renderProps) => {
         </View>
         <View style={{ alignItems: 'flex-end', gap: 6 }}>
           <Text>{currency.quote.EUR.price.toFixed(2)}€</Text>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-            <Ionicons name={checkPercentageValue ? 'caret-up' : 'caret-down'} size={16} color={checkPercentageValue ? Colors.success : Colors.danger} />
-            <Text>{currency.quote.EUR.percent_change_1h.toFixed(2)}</Text>
-          </View>
+          <CurrencyPercentage percentage={checkPercentageValue} />
         </View>
       </TouchableOpacity>
     </Link>

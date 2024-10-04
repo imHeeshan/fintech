@@ -2,7 +2,6 @@ import { StyleSheet, ViewStyle } from "react-native";
 import Colors from "./Colors";
 
 const circle: ViewStyle = {
-
     backgroundColor: Colors.lightGray,
     alignItems: 'center',
     justifyContent: 'center',
@@ -27,23 +26,23 @@ export const defaultStyles = StyleSheet.create({
         borderRadius: 20,
         justifyContent: 'center',
         alignItems: 'center',
-        flexDirection:'row'
-      },
-    headerText: {
+        flexDirection: 'row'
+    },
+    headerTxt: {
         fontSize: 40,
         fontWeight: '700',
     },
-    descriptionText: {
+    descriptionTxt: {
         fontSize: 18,
         marginTop: 20,
         color: Colors.gray,
     },
-    linkText: {
+    linkTxt: {
         color: Colors.lightBlue,
         fontSize: 18,
         fontWeight: '500',
     },
-    buttonText: {
+    buttonTxt: {
         color: '#fff',
         fontSize: 18,
         fontWeight: '500',
@@ -72,13 +71,28 @@ export const defaultStyles = StyleSheet.create({
         gap: 20,
     },
     subTitle: {
-        color:Colors.gray,
-        fontWeight:'600',
-        fontSize:20,
+        color: Colors.gray,
+        fontWeight: '600',
+        fontSize: 20,
         // margin: 14,
+    },
+    smallTitleTxt: {
+        color: Colors.gray,
+        fontWeight: '600',
+        fontSize: 12,
+    },
+    smallSubTxt: {
+        color: Colors.gray,
+        fontSize: 11,
+        fontWeight: '600',
     },
     emptyTxt: {
         color: Colors.gray,
         padding: 14, fontWeight: '400'
-      }
+    },
+    flexRowView: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    }
 })
