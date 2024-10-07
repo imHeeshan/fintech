@@ -50,8 +50,8 @@ interface Platform {
 
 
 
-export interface Currency {
-  [key: number]: {
+export interface CurrencyInfo {
+
     id?: number;
     name?: string;
     symbol?: string;
@@ -75,7 +75,6 @@ export interface Currency {
     self_reported_tags?: null;
     tags?: any[];
     twitter_username?: string;
-  }
 
 }
 export interface ITickerHistory {
@@ -92,12 +91,10 @@ export interface ITickerHistory {
   marketCap: number;
   timestamp: string;
 }
-
 export interface Ticker {
-  symbol: string;
   history: ITickerHistory[];
+  [key: string]: any;
 }
-
 export interface INewsArticle {
   id:number,
   source: {

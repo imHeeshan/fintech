@@ -8,11 +8,9 @@ import { useBalanceStore } from '@/store/balanceStore'
 import { Ionicons } from '@expo/vector-icons'
 import WidgetList from '@/components/SortableList/WidgetList'
 import { useHeaderHeight } from '@react-navigation/elements'
-import Loader from '@/components/Loader'
 const Page = () => {
   const headerHeight = useHeaderHeight()
  
-  // Using selectors for specific state pieces
   const balance = useBalanceStore((state) => state.balance);
   const transactions = useBalanceStore((state) => state.transactions);
   const clearTransactions = useBalanceStore((state) => state.clearTransactions);

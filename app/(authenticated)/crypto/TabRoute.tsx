@@ -11,14 +11,14 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useHeaderHeight } from "@react-navigation/elements"
-import { Currency, ICurrency } from '@/interface/crypto';
+import { CurrencyInfo, ICurrency } from '@/interface/crypto';
 import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 import Colors from '@/constants/Colors';
 import { SCREEN_HEIGHT } from '@/units/units';
 
 interface ITabProps {
   currencies: ICurrency[],
-  currencyDetails: Currency,
+  currencyDetails: CurrencyInfo,
   handleScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void,
   handlePullRefresh?: () => {}
   refreshing?: boolean,

@@ -9,10 +9,11 @@ const CurrencyPercentage = ({ percentage }: TProps) => {
     const checkPercentageValue = percentage > 0
     return (
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-            <Ionicons name={checkPercentageValue ? 'caret-up' : 'caret-down'} size={16}
+            <Ionicons name={checkPercentageValue ? 'caret-up-sharp' : 'caret-down-sharp'} size={16}
                 color={checkPercentageValue ? Colors.success : Colors.danger} />
-            <Text>{percentage.toFixed(2)} %</Text>
-        </View>
+            <Text>
+                {Math.abs(percentage).toFixed(2)} %</Text>
+        </View >
     )
 }
 

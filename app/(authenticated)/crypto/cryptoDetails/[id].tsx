@@ -1,45 +1,35 @@
-import { ActivityIndicator, SafeAreaView, ScrollView, SectionList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { SafeAreaView, SectionList, StyleSheet, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router'
 import { useHeaderHeight } from '@react-navigation/elements'
-import { defaultStyles } from '@/constants/Styles'
 import Colors from '@/constants/Colors'
 import { useQuery } from '@tanstack/react-query'
-import { CartesianChart, Line, useChartPressState } from "victory-native";
-import { Circle, useFont } from '@shopify/react-native-skia'
-import { format } from 'date-fns'
-import * as Haptics from 'expo-haptics'
-import Animated, { SharedValue, useAnimatedProps, useAnimatedScrollHandler, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import RenderSectionHeader from './RenderSectionHeader'
 import RenderListHeader from './RenderListHeader'
-import { formatPriceFn } from '@/constants/ReusableFn'
-import RenderNewsSection from './RenderNewsSection'
+import NewsSection from './NewsSection'
 import { NormalLoader } from '@/components/Loader'
 import { Ionicons } from '@expo/vector-icons'
 import CurrencyPercentage from '@/components/CurrencyPercentage'
-import Orders from './Orders'
+import Markets from './Markets'
 import Transaction from './Transaction'
+import OverviewSection from './OverviewSection'
 
 
-const categories = ['Overview', 'News', 'Orders', 'Transactions',];
-Animated.addWhitelistedNativeProps({ text: true })
-const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
-function ToolTip({ x, y }: { x: SharedValue<number>; y: SharedValue<number> }) {
-    return <Circle cx={x} cy={y} r={8} color={Colors.primary} />;
-}
+const categories = ['Overview', 'News', 'Markets', 'Transactions',];
 
 const Page = () => {
     const { id } = useLocalSearchParams()
-    const [activeIndex, setActiveIndex] = useState(0)
-    const headerHeight = useHeaderHeight()
-    const font = useFont(require('@/assets/fonts/SpaceMono-Regular.ttf'), 10)
-    const [isLoading, setIsLoading] = useState(false)
-    const { state, isActive } = useChartPressState({ x: 0, y: { volume: 0 } });
-    const router = useRouter()
-    const scrollY = useSharedValue(0); // Using shared value for better performance
+    const [activeIndex, setActiveIndex] = useState<number>(0)
+    const [symbol, setSymbol] = useState<string>("")
+    const [slug, setSlug] = useState<string>("")
 
-    const handleScroll = (event) => {
-        scrollY.value = event.nativeEvent.contentOffset.y; // Update scroll value
+    const headerHeight = useHeaderHeight()
+    const router = useRouter()
+    const scrollY = useSharedValue(0);
+
+    const handleScroll = (event: { nativeEvent: { contentOffset: { y: number } } }) => {
+        scrollY.value = event.nativeEvent.contentOffset.y;
     };
 
     const animatedTextStyle = useAnimatedStyle(() => {
@@ -51,15 +41,12 @@ const Page = () => {
 
     const animatedViewStyle = useAnimatedStyle(() => {
         const opacity = withTiming(scrollY.value > 40 ? 1 : 0, { duration: 300 });
+        const display = withTiming(scrollY.value > 40 ? "flex" : "none", { duration: 300 });
         return {
             opacity,
+            display,
         };
     });
-    useEffect(() => {
-        if (isActive) {
-            Haptics.selectionAsync()
-        }
-    }, [isActive])
 
     const { data: currencyInfo } = useQuery({
         queryKey: ['currencyInfo', id],
@@ -78,14 +65,6 @@ const Page = () => {
         enabled: !!id
     })
 
-    const [symbol, setSymbol] = useState<string>("")
-    const [slug, setSlug] = useState<string>("")
-    useEffect(() => {
-        if (currencyInfo) {
-            setSymbol(currencyInfo?.symbol)
-            setSlug(currencyInfo?.slug)
-        }
-    }, [currencyInfo])
 
     const { data: tickers } = useQuery({
         queryKey: ['tickers', currencyInfo],
@@ -109,29 +88,33 @@ const Page = () => {
         },
         enabled: !!slug && activeIndex === 1
     });
-    const animatedPriceText = useAnimatedProps(() => {
-        return {
-            text: `${state.y.volume.value.value?.toFixed(2)} €`,
-            defaultValue: `${state.y.volume.value.value?.toFixed(2)} €`
-        }
-    })
-    const animatedDateText = useAnimatedProps(() => {
-        const date = new Date(state.x.value.value)
-        return {
-            text: `${date.toLocaleDateString()}`,
-            defaultValue: ''
-        }
-    })
+
     useEffect(() => {
-        setIsLoading(true)
-        setTimeout(() => {
-            setIsLoading(false)
-        }, 800);
-    }, [id])
+        if (currencyInfo) {
+            setSymbol(currencyInfo?.symbol)
+            setSlug(currencyInfo?.slug)
+        }
+    }, [currencyInfo])
 
     if (tickers?.length === 0 || tickers == undefined) {
         return <NormalLoader />
     }
+
+    const renderSection = () => {
+        switch (activeIndex) {
+            case 0:
+                return <OverviewSection tickers={tickers} currencyInfo={currencyInfo} />;
+            case 1:
+                return <NewsSection data={news} />;
+            case 2:
+                return <Markets />;
+            case 3:
+                return <Transaction />;
+            default:
+                return null;
+        }
+    };
+
     return (
         <SafeAreaView style={{ flex: 1, paddingTop: headerHeight, }}>
             <Stack.Screen
@@ -139,12 +122,13 @@ const Page = () => {
                     headerTitleAlign: 'center',
                     headerTitle: () => (
                         <View style={{ alignItems: 'center' }}>
-                            <Animated.Text style={[defaultStyles.subTitle, animatedTextStyle]}>
+                            <Animated.Text style={[styles.animatedText, animatedTextStyle]}>
                                 {currencyInfo?.name ? currencyInfo.name : ''}</Animated.Text>
-                            <Animated.View style={[{ flexDirection: 'row', alignItems: 'center' }, animatedViewStyle]}>
-                                <Text>
-                                    {currencyInfo?.symbol ? currencyInfo.symbol : ''}
-                                </Text>
+                            <Animated.View style={[{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                            },
+                                animatedViewStyle]}>
                                 <CurrencyPercentage percentage={currency?.quote?.EUR?.percent_change_1h} />
                             </Animated.View>
                         </View>
@@ -174,78 +158,12 @@ const Page = () => {
                     <RenderListHeader data={currencyInfo} />
                 )}
                 renderItem={() => {
-                    const pointWidth = 3; // Width per data point
-
-                    const chartWidth = tickers?.length * pointWidth;
                     return (
-                        <>
-                            {activeIndex === 0 ? <View style={{ flex: 1, }}>
-                                <View style={[defaultStyles.sectionBlock, { marginTop: 20, height: 450, }]}>
-                                    {tickers &&
-                                        <>
-                                            {!isActive &&
-                                                <View>
-                                                    <Text style={{ fontSize: 20, color: Colors.dark, fontWeight: '600' }}>
-                                                        {tickers[tickers.length - 1]?.volume?.toFixed(2)} €</Text>
-                                                    <Text style={{ fontSize: 13, color: Colors.gray }}>Today</Text>
-                                                </View>}
-                                            {isActive &&
-                                                <View>
-                                                    <AnimatedTextInput
-                                                        editable={false}
-                                                        underlineColorAndroid={'transparent'}
-                                                        style={{ fontSize: 20, color: Colors.dark, fontWeight: '600' }}
-                                                        animatedProps={animatedPriceText}
-                                                        defaultValue={animatedPriceText.defaultValue}
-                                                    />
-                                                    <AnimatedTextInput
-                                                        editable={false}
-                                                        underlineColorAndroid={'transparent'}
-                                                        style={{ fontSize: 13, color: Colors.gray }}
-                                                        animatedProps={animatedDateText}
-                                                    />
-                                                </View>}
-                                            <View style={{ flex: 1 }}>
-                                                <CartesianChart
-                                                    axisOptions={{
-                                                        font,
-                                                        tickCount: 8,
-                                                        labelOffset: { x: 2, y: 5 },
-                                                        formatYLabel: (v) => {
-                                                            const formatPrice = formatPriceFn(v)
-                                                            return `${formatPrice} €`
-                                                        },
-                                                        formatXLabel: (ms) => `${format(new Date(ms), 'MM/yy')}`
-                                                    }}
-                                                    chartPressState={state}
-                                                    data={tickers!} xKey="timestamp" yKeys={["volume"]}>
-                                                    {({ points }) => (
-                                                        <>
-                                                            <Line points={points.volume} color={Colors.primary} strokeWidth={3} />
-                                                            {isActive && (
-                                                                <ToolTip x={state.x.position} y={state.y.volume.position} />
-                                                            )}
-                                                        </>
-                                                    )}
-                                                </CartesianChart>
-
-                                            </View>
-
-                                        </>}
-                                </View>
-                                <View style={[defaultStyles.sectionBlock, { marginVertical: 20, }]}>
-                                    <Text style={[{ color: Colors.gray }, defaultStyles.subTitle]}>Overview </Text>
-                                    <Text style={{ color: Colors.gray, lineHeight: 18 }}>{currencyInfo?.description} </Text>
-                                </View>
-                            </View> : activeIndex === 1 ? <RenderNewsSection data={news} /> :
-                                activeIndex === 2 ? <Orders /> : activeIndex === 3 ? <Transaction /> : null}
-                        </>
+                        <>{renderSection()}</>
                     )
                 }
-
                 }
             />
-
         </SafeAreaView>
 
     )
@@ -255,8 +173,9 @@ export default Page
 
 const styles = StyleSheet.create({
     animatedText: {
-        fontSize: 20,
+        fontSize: 18,
         textAlign: 'center',
-        marginBottom: 20,
+        fontWeight: "600",
+        color: Colors.dark
     },
 })

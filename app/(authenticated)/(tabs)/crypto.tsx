@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Alert, Dimensions, NativeScrollEvent, NativeSyntheticEvent, RefreshControl } from 'react-native';
 import { TabView, TabBar, SceneRendererProps } from 'react-native-tab-view';
 import Colors from "@/constants/Colors";
-import { Currency, ICurrency } from "@/interface/crypto";
+import { CurrencyInfo, ICurrency } from "@/interface/crypto";
 import { useQuery } from "@tanstack/react-query";
 import { View, Text, StyleSheet, StatusBar } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -18,7 +18,7 @@ const Page = () => {
   const insets = useSafeAreaInsets()
   const [currentPage, setCurrentPage] = useState(1);
   const [paginationData, setPaginationData] = useState<ICurrency[]>([]);
-  const [currencyDetails, setCurrencyDetails] = useState<Currency>({})
+  const [currencyDetails, setCurrencyDetails] = useState<CurrencyInfo>({})
   const [index, setIndex] = useState(0);
   const [limit, setLimit] = useState(30)
   const [refreshing, setRefreshing] = useState(false);

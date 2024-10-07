@@ -1,11 +1,11 @@
 import { currencyInfo } from '@/assets/data/dummyData';
-import { Currency } from '@/interface/crypto';
+import { CurrencyInfo } from '@/interface/crypto';
 import { ExpoRequest, ExpoResponse } from 'expo-router/server'
 
 const API_KEY = process.env.CRYPTO_API_KEY
 
 type tCurrency = {
-  [key: string]: Currency; 
+  [key: string]: CurrencyInfo; 
 };
 export async function GET(request: Request) {
   const url = new URL(request.url);

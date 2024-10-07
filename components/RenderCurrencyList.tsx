@@ -4,13 +4,13 @@ import { Link } from 'expo-router';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Colors from '@/constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
-import { Currency, ICurrency } from '@/interface/crypto';
+import { CurrencyInfo, ICurrency } from '@/interface/crypto';
 import CurrencyPercentage from './CurrencyPercentage';
 
 
 type renderProps = {
   currency: ICurrency,
-  currencyDetails: Currency
+  currencyDetails: CurrencyInfo
 }
 const RenderCurrencyList = ({ currency, currencyDetails }: renderProps) => {
   const checkPercentageValue = currency.quote.EUR.percent_change_1h

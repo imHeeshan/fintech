@@ -3,23 +3,20 @@ import React from 'react'
 import { Ionicons } from '@expo/vector-icons'
 import { defaultStyles } from '@/constants/Styles'
 import Colors from '@/constants/Colors'
-import { Currency, Ticker } from '@/interface/crypto'
+import { CurrencyInfo, Ticker } from '@/interface/crypto'
 
 const RenderListHeader = ({ data }: any) => {
     return (
         <View style={{ marginHorizontal: 16 }}>
-            <View style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginHorizontal: 16,
-                paddingVertical:5
-            }}>
-                <View style={[defaultStyles.flexRowView,{gap:5}]}>
-                    <Text style={[defaultStyles.subTitle,{color:Colors.dark,fontSize:22}]}>{data?.name}</Text>
-                    <Text style={[defaultStyles.subTitle,{fontSize:18}]}>{data?.symbol}</Text>
+            <View style={styles.headerContainer}>
+
+                <Text style={[defaultStyles.subTitle, { color: Colors.dark, fontSize: 22 }]}>{data?.name}</Text>
+            </View>
+            <View style={styles.headerContainer}>
+                <View style={[defaultStyles.flexRowView, { gap: 5 }]}>
+                    <Text style={[defaultStyles.subTitle, { fontSize: 16 }]}>{data?.symbol}</Text>
                 </View>
-                <Image source={{ uri: data?.logo }} style={{ width: 40, height: 40, borderRadius: 40 }} />
+                <Image source={{ uri: data?.logo }} style={{ width: 50, height: 50, borderRadius: 40 }} />
             </View>
             <View style={{ flexDirection: 'row', gap: 16, margin: 12 }}>
                 <TouchableOpacity style={[defaultStyles.pillButtonSmall, { backgroundColor: Colors.primary, }]}>
@@ -37,4 +34,12 @@ const RenderListHeader = ({ data }: any) => {
 
 export default RenderListHeader
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+    headerContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginHorizontal: 16,
+        paddingVertical: 5
+    }
+})
