@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, StyleSheet, Alert } from 'react-native';
+import { View, Text, Button, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import * as LocalAuthentication from 'expo-local-authentication';
 import { useRouter } from 'expo-router';
+import Entypo from '@expo/vector-icons/Entypo';
+import Colors from '@/constants/Colors';
 
 const Page = () => {
   const [isBiometricSupported, setIsBiometricSupported] = useState(false);
@@ -31,6 +33,7 @@ const Page = () => {
         fallbackLabel: 'Use Passcode',
         disableDeviceFallback: false,  // Allow using PIN/Passcode if biometrics fail
       });
+console.log(result);
 
       if (result.success) {
         setAuthenticated(true);
@@ -42,9 +45,9 @@ const Page = () => {
       console.error(error);
     }
   };
-useEffect(() => {
-  handleAuthentication()
-}, [])
+  useEffect(() => {
+    handleAuthentication()
+  }, [])
 
   return (
     <View style={styles.container}>
@@ -55,7 +58,9 @@ useEffect(() => {
               ? 'Biometric Authentication is available'
               : 'Your device does not support Biometrics'}
           </Text>
-          <Button title="Unlock with fingerprint" onPress={handleAuthentication} />
+          <TouchableOpacity onPress={handleAuthentication}>
+            <Entypo name="fingerprint" size={60} color={Colors.primaryMuted} />
+          </TouchableOpacity>
         </View>
       )}
     </View>

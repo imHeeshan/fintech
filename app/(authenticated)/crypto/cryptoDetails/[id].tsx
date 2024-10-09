@@ -11,7 +11,7 @@ import NewsSection from './NewsSection'
 import { NormalLoader } from '@/components/Loader'
 import { Ionicons } from '@expo/vector-icons'
 import CurrencyPercentage from '@/components/CurrencyPercentage'
-import Markets from './Markets'
+import MarketSection from './MarketSection'
 import Transaction from './Transaction'
 import OverviewSection from './OverviewSection'
 
@@ -20,7 +20,7 @@ const categories = ['Overview', 'News', 'Markets', 'Transactions',];
 
 const Page = () => {
     const { id } = useLocalSearchParams()
-    const [activeIndex, setActiveIndex] = useState<number>(0)
+    const [activeIndex, setActiveIndex] = useState<number>(2)
     const [symbol, setSymbol] = useState<string>("")
     const [slug, setSlug] = useState<string>("")
 
@@ -77,17 +77,6 @@ const Page = () => {
         },
         enabled: !!symbol
     });
-    const { data: news } = useQuery({
-        queryKey: ['news', currencyInfo],
-        queryFn: async () => {
-            const response = await fetch(`/api/news?slug=${slug}`);
-            if (!response.ok) {
-                throw new Error('Failed to fetch data');
-            }
-            return response.json();
-        },
-        enabled: !!slug && activeIndex === 1
-    });
 
     useEffect(() => {
         if (currencyInfo) {
@@ -105,9 +94,11 @@ const Page = () => {
             case 0:
                 return <OverviewSection tickers={tickers} currencyInfo={currencyInfo} />;
             case 1:
-                return <NewsSection data={news} />;
+                return <NewsSection slug={slug} activeIndex={activeIndex} />;
             case 2:
-                return <Markets />;
+                return <MarketSection 
+                slug={slug} activeIndex={activeIndex} 
+                currencyName={currencyInfo?.name ? currencyInfo.name : ''} />;
             case 3:
                 return <Transaction />;
             default:
@@ -129,7 +120,10 @@ const Page = () => {
                                 alignItems: 'center',
                             },
                                 animatedViewStyle]}>
-                                <CurrencyPercentage percentage={currency?.quote?.EUR?.percent_change_1h} />
+                                <CurrencyPercentage
+                                    percentage={currency?.quote?.EUR?.percent_change_1h}
+                                    txtColor={true}
+                                />
                             </Animated.View>
                         </View>
                     ),
@@ -157,15 +151,10 @@ const Page = () => {
                 ListHeaderComponent={() => (
                     <RenderListHeader data={currencyInfo} />
                 )}
-                renderItem={() => {
-                    return (
-                        <>{renderSection()}</>
-                    )
-                }
+                renderItem={() => renderSection()
                 }
             />
         </SafeAreaView>
-
     )
 }
 

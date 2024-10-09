@@ -109,3 +109,50 @@ export interface INewsArticle {
   publishedAt: string;
   content: string | null;
 }
+export interface IRootMarket {
+  name: string;
+  tickers: IMarket[];
+}
+
+export interface IMarket {
+  base?: string;
+  target?: string;
+  market?: Market;
+  last?: number;
+  volume?: number;
+  converted_last?: {};
+  converted_volume?: {};
+  trust_score?: number;
+  bid_ask_spread_percentage?: number;
+  timestamp?: string;
+  last_traded_at?: string;
+  last_fetch_at?: string;
+  is_anomaly?: boolean;
+  is_stale?: boolean;
+  trade_url?: null | string;
+  token_info_url?: null;
+  coin_id?: string;
+  target_coin_id?: string;
+}
+
+
+interface Market {
+  name: string;
+  identifier: string;
+  has_trading_incentive: boolean;
+}
+
+export interface IExchanges {
+  id?: string;
+  name?: string;
+  year_established?: null | number;
+  country?: null | string;
+  description?: null | string;
+  url?: string;
+  image?: string;
+  has_trading_incentive?: boolean;
+  trust_score?: number;
+  trust_score_rank?: number;
+  trade_volume_24h_btc?: number;
+  trade_volume_24h_btc_normalized?: number;
+}

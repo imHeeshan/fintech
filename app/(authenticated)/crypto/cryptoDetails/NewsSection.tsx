@@ -7,21 +7,36 @@ import { Ionicons } from '@expo/vector-icons';
 import Colors from '@/constants/Colors';
 import { NormalLoader } from '@/components/Loader';
 import { useNewsBookmarkStore } from '@/store/newsBookmarkStore';
-interface NewsSectionProps {
-  data: INewsArticle[];
+import { useQuery } from '@tanstack/react-query';
+interface Iprops {
+  slug: string,
+  activeIndex: number
 }
-const RenderNewsSection = ({ data }: NewsSectionProps) => {
+
+const NewsSection = ({ slug, activeIndex }: Iprops) => {
   const bookmarks = useNewsBookmarkStore((state) => state.bookmarks);
   const addBookmark = useNewsBookmarkStore((state) => state.addBookmark);
   const isBookmarked = (id: number) => bookmarks.some((b) => b.id === id);
+  const { data: articles, isFetching } = useQuery<INewsArticle[]>({
+    queryKey: ['news', slug],
+    queryFn: async () => {
+      const response = await fetch(`/api/news?slug=${slug}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch data');
+      }
+      return response.json();
+    },
+    enabled: !!slug && activeIndex === 1,
+    placeholderData: []
+  });
 
-  if (data == undefined) {
+  if (isFetching) {
     return <NormalLoader />
   }
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={[defaultStyles.sectionBlock, { marginBottom: 20 }]}>
-        {data && data.map((news) => {
+        {articles && articles.map((news) => {
           return (
             <View style={styles.listItem}>
               <Image
@@ -32,7 +47,7 @@ const RenderNewsSection = ({ data }: NewsSectionProps) => {
                   <Text numberOfLines={1}
                     style={[defaultStyles.smallTitleTxt, { color: Colors.dark, flex: 1 }]}>{news.title}</Text>
                   <TouchableOpacity onPress={() => addBookmark({ id: news.id })}>
-                    <Ionicons name={`${isBookmarked(news?.id)?'bookmark':'bookmark-outline'}`} size={20} />
+                    <Ionicons name={`${isBookmarked(news?.id) ? 'bookmark' : 'bookmark-outline'}`} size={20} />
                   </TouchableOpacity>
                 </View>
                 <Text numberOfLines={2} style={defaultStyles.smallSubTxt}>{news.description}</Text>
@@ -52,7 +67,7 @@ const RenderNewsSection = ({ data }: NewsSectionProps) => {
   )
 }
 
-export default RenderNewsSection
+export default NewsSection
 
 const styles = StyleSheet.create({
 
