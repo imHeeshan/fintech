@@ -156,3 +156,13 @@ export interface IExchanges {
   trade_volume_24h_btc?: number;
   trade_volume_24h_btc_normalized?: number;
 }
+
+export interface ICoin {
+  id: string;
+  name: string;
+  api_symbol: string;
+  symbol: string;
+  market_cap_rank: number;
+  thumb: string;
+  large: string;
+}

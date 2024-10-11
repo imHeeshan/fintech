@@ -66,7 +66,7 @@ const InitialLayout = () => {
     if (isSignedIn && !inAuthGroup) {
       console.log(isSignedIn);
 
-      router.replace('/(authenticated)/(tabs)/crypto');
+      router.replace('/(authenticated)/(tabs)/home');
 
     } else if (!isSignedIn) {
       router.replace('/');
