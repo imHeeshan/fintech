@@ -1,24 +1,26 @@
-import Colors from "@/constants/Colors";
-import { defaultStyles } from "@/constants/Styles";
-import { Currency, ICurrency } from "@/interface/crypto";
-import { Ionicons } from "@expo/vector-icons";
-import { useQuery } from "@tanstack/react-query";
-import { Link } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, Image, StyleSheet, ActivityIndicator, StatusBar, SafeAreaView, TouchableOpacity, ScrollView } from "react-native";
+import { Dimensions, NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
+import { TabView, TabBar, SceneRendererProps } from 'react-native-tab-view';
+import Colors from "@/constants/Colors";
+import { useQuery } from "@tanstack/react-query";
+import { View, Text, StyleSheet, StatusBar } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useHeaderHeight } from '@react-navigation/elements'
-import Loader from "@/components/Loader";
+import TabRoute from "../crypto/TabRoute";
+import { currencyFilter } from "@/constants/ReusableFn";
+import { NormalLoader } from "@/components/Loader";
+import { ICurrency } from "@/interface/cryptoInterface";
+
 
 const Page = () => {
   const headerHeight = useHeaderHeight()
-  const insets = useSafeAreaInsets()
-  const tabBarHeight = insets.bottom + 60;
   const [currentPage, setCurrentPage] = useState(1);
   const [paginationData, setPaginationData] = useState<ICurrency[]>([]);
-  const [currencyForLogo, setCurrencyForLogo] = useState<Currency>({})
+  const [index, setIndex] = useState(0);
+  const [refreshing, setRefreshing] = useState(false);
+  const [isLoadingData, setIsLoadingData] = useState(false)
 
-  const { data: currencies, isLoading, isFetching } = useQuery({
+  const { data: currencies, isFetching, refetch } = useQuery({
     queryKey: ['currencies', currentPage],
     queryFn: async () => {
       const response = await fetch(`/api/listings?page=${currentPage}`);
@@ -27,123 +29,155 @@ const Page = () => {
       }
       return response.json();
     },
-    enabled: !!currentPage,
+    enabled: false,
     placeholderData: [],
   });
-
-  // When `currencies` change, update pagination data
   useEffect(() => {
-    if (currencies) {
-      // setPaginationData((prevData) => {
-      //   // Filter out items that are already in the paginationData
-      //   const newData = currencies.filter((currency) =>
-      //     !prevData.find((item) => item.id === currency.id) // Assuming `id` is the unique key
-      //   );
-      //   return [...prevData, ...newData];
-      // });
-      setPaginationData((prevData) => [...prevData, ...currencies]);
-
+    if (currentPage || refreshing) {
+      refetch();
+    }
+  }, [currentPage, refreshing]);
+  useEffect(() => {
+    if (refreshing) {
+      setPaginationData([])
+    }
+    if (currentPage > 1) {
+      setIsLoadingData(true)
+    }
+    if (currencies?.length > 0) {
+      console.log(currencies[0]);
+      
+      setPaginationData((prevData) => {
+        const newData = currencies.filter(
+          (currency: { id: string }) => !prevData.some((item) => item.id === currency.id) // Avoid duplicates
+        );
+        return [...prevData, ...newData];
+      });
+      setRefreshing(false)
+      setIsLoadingData(false)
     }
 
-  }, [currencies]);
-  const ids = currencies.map((currency: ICurrency) => currency.id).join(',');
-  const { data: currencyInfo, isFetching: isLogoFetching } = useQuery({
-    queryKey: ['currencyInfo', ids],
-    queryFn: async () => {
-      const response = await fetch(`/api/info?ids=${ids}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch data');
-      }
-      return response.json();
+  }, [currencies, refreshing]);
 
-    },
-    enabled: !!ids,
-    placeholderData: []
-
-  });
-  useEffect(() => {
-    if (currencyInfo) {
-      setCurrencyForLogo((prevData) => ({ ...prevData, ...currencyInfo }));
-    }
-  }, [currencyInfo])
-
-  const renderItem = (currency) => {
-    const checkPercentageValue = currency.quote.EUR.percent_change_1h > 0
-    return (
-      <Link href={`/crypto/${currency.id}`} asChild key={currency.id}>
-        <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', gap: 14 }}>
-          <Image source={{ uri: currencyForLogo[currency.id]?.logo }} style={{ width: 40, height: 40 }} />
-          <View style={{ flex: 1, gap: 6 }}>
-            <Text style={{ fontWeight: '600', color: Colors.dark }}>{currency.name}</Text>
-            <Text style={{ color: Colors.gray, fontSize: 13 }}>{currency.symbol}</Text>
-          </View>
-          <View style={{ alignItems: 'flex-end', gap: 6 }}>
-            <Text>{currency.quote.EUR.price.toFixed(2)}€</Text>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-              <Ionicons name={checkPercentageValue ? 'caret-up' : 'caret-down'} size={16} color={checkPercentageValue ? Colors.success : Colors.danger} />
-              <Text>{currency.quote.EUR.percent_change_1h.toFixed(2)}</Text>
-            </View>
-          </View>
-        </TouchableOpacity>
-      </Link>
-    );
-  }
 
   const loadMoreItem = () => {
     if (!isFetching && currencies?.length > 0) {
-
       setCurrentPage((prevPage) => prevPage + 1);
-
     }
   };
-  const handleScroll = ({ nativeEvent }) => {
+  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const { nativeEvent } = event
     const isCloseToBottom =
       nativeEvent.layoutMeasurement.height + nativeEvent.contentOffset.y >=
       nativeEvent.contentSize.height - 20;
-    if (isCloseToBottom && !isFetching && !isLogoFetching) {
+    if (isCloseToBottom && !isFetching) {
       loadMoreItem();
     }
   };
-  return (
-    <ScrollView
-      style={{
-        // paddingBottom: tabBarHeight, 
-        backgroundColor: Colors.background
-      }}
-      contentContainerStyle={{ paddingTop: headerHeight, paddingBottom: tabBarHeight }}
-      showsVerticalScrollIndicator={false}
-      onScroll={handleScroll}
-      scrollEventThrottle={16}  // Adjust scroll performance
-    >
-      <View style={defaultStyles.sectionBlock}>
-        {paginationData.map((currency) => {
-          return renderItem(currency)
-        })}
-        <Loader />
-        {/* {currencies.length !== 0 && <View style={{ backgroundColor:"red" }}><Loader /></View>} */}
-      </View>
-    </ScrollView>
+  const handlePullRefresh = async () => {
+    setRefreshing(true)
+    setCurrentPage(1)
+  }
+  type Route = {
+    key: 'all' | 'gainer' | 'losers';
+    title: string
+  };
+  type State = {
+    index: number;
+    routes: Route[];
+  };
+  const [routes] = useState<Route[]>([
+    { key: 'all', title: 'All' },
+    { key: 'gainer', title: 'Gainers' },
+    { key: 'losers', title: 'Losers' },
+  ]);
 
+  const renderScene = ({ route }: { route: Route }) => {
+    switch (route.key) {
+      case 'all':
+        return <TabRoute
+          currencies={paginationData}
+          handleScroll={handleScroll}
+          handlePullRefresh={handlePullRefresh}
+          refreshing={refreshing}
+          isFetching={isLoadingData}
+        />;
+      case 'gainer':
+        return <TabRoute
+          currencies={currencyFilter(paginationData, "gainer")}
+          handleScroll={handleScroll}
+
+        />;
+      case 'losers':
+        return <TabRoute
+          currencies={currencyFilter(paginationData, "loser")}
+          handleScroll={handleScroll}
+        />
+      default:
+        return null;
+    }
+  };
+  const renderTabBar = (props: SceneRendererProps & { navigationState: State }) => (
+    <TabBar
+      {...props}
+      style={styles.tabBar}
+      indicatorStyle={[styles.indicator, {}]}
+      renderLabel={({ route, focused, color }) => (
+        <View style={{
+          width: (Dimensions.get('window').width - 20) / 3,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+          <Text style={[styles.label, focused && styles.activeLabel]}>{route.title}</Text>
+        </View>
+      )}
+    />
   );
-};
+
+  if (paginationData.length === 0 && !refreshing) {
+    return <NormalLoader />
+  }
+
+  return (
+    <View style={{ paddingTop: headerHeight, flex: 1, paddingHorizontal: 10 }}>
+      <TabView
+        navigationState={{ index, routes }}
+        renderScene={renderScene}
+        onIndexChange={setIndex}
+        initialLayout={{ width: Dimensions.get('window').width }}
+        renderTabBar={renderTabBar}
+
+      />
+    </View>
+  );
+}
+export default Page
+
 
 const styles = StyleSheet.create({
-  itemWrapperStyle: {
-    flexDirection: "row",
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-    borderBottomWidth: 1,
-    borderColor: "#ddd",
+  container: {
+    flex: 1,
+    paddingTop: StatusBar.currentHeight,
   },
-  itemImageStyle: {
-    width: 50,
-    height: 50,
-    marginRight: 16,
+  scene: {
+    flex: 1,
   },
-  loaderStyle: {
-    marginVertical: 16,
-    alignItems: "center",
+  tabBar: {
+    backgroundColor: Colors.background,
+    height: 40
+  },
+  indicator: {
+    backgroundColor: Colors.lightBlue,
+    borderRadius: 30
+  },
+  label: {
+    color: Colors.gray,
+    textAlign: 'center',
+    width: '100%',
+  },
+  activeLabel: {
+    fontWeight: '500',
+    color: Colors.dark
+
   },
 });
-
-export default Page;

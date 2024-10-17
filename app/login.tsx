@@ -49,8 +49,8 @@ const Page = () => {
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={keyboardbehavior} keyboardVerticalOffset={keyboardVerticalOffset}>
       <View style={defaultStyles.container}>
-        <Text style={[defaultStyles.headerText, {}]}>Welcome back!</Text>
-        <Text style={[defaultStyles.descriptionText, {}]}>Enter your mobile number associated with your account</Text>
+        <Text style={[defaultStyles.headerTxt, {}]}>Welcome back!</Text>
+        <Text style={[defaultStyles.descriptionTxt, {}]}>Enter your mobile number associated with your account</Text>
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
@@ -69,7 +69,7 @@ const Page = () => {
         <TouchableOpacity style={[defaultStyles.pillButton, { backgroundColor: mobileNumber !== '' ? Colors.primary : Colors.primaryMuted }]}
           onPress={() => handleOnSignIn(SignInType.Phone)}
         >
-          <Text style={defaultStyles.buttonText}>Continue</Text>
+          <Text style={defaultStyles.buttonTxt}>Continue</Text>
         </TouchableOpacity>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 16, marginVertical: 20 }}>
           <View
@@ -83,17 +83,17 @@ const Page = () => {
         <TouchableOpacity style={[defaultStyles.pillButton, styles.button]}
           onPress={() => handleOnSignIn(SignInType.Email)}>
           <Ionicons name="mail" size={26} color={Colors.dark} />
-          <Text style={[defaultStyles.buttonText, { color: Colors.dark }]}>Continue with email</Text>
+          <Text style={[defaultStyles.buttonTxt, { color: Colors.dark }]}>Continue with email</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[defaultStyles.pillButton, styles.button]}
           onPress={() => handleOnSignIn(SignInType.Google)}>
           <Ionicons name="logo-google" size={26} color={Colors.dark} />
-          <Text style={[defaultStyles.buttonText, { color: Colors.dark }]}>Continue with google</Text>
+          <Text style={[defaultStyles.buttonTxt, { color: Colors.dark }]}>Continue with google</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[defaultStyles.pillButton, styles.button]}
           onPress={() => handleOnSignIn(SignInType.Apple)}>
           <Ionicons name="logo-apple" size={26} color={Colors.dark} />
-          <Text style={[defaultStyles.buttonText, { color: Colors.dark }]}>Continue with apple</Text>
+          <Text style={[defaultStyles.buttonTxt, { color: Colors.dark }]}>Continue with apple</Text>
         </TouchableOpacity>
 
       </View>

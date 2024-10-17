@@ -1,6 +1,6 @@
 import Colors from '@/constants/Colors';
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import Animated, {
     useSharedValue,
     useAnimatedStyle,
@@ -9,7 +9,7 @@ import Animated, {
     useDerivedValue,
 } from 'react-native-reanimated';
 
-export default function Loader() {
+function AnimatedLoader() {
     const scale = useSharedValue<number>(1);
     const scaleStyles = useAnimatedStyle(() => ({
         transform: [{ scale: scale.value }],
@@ -34,16 +34,20 @@ export default function Loader() {
         };
     }, []);
 
-
-
-
     return (
         <View style={styles.container}>
             <Animated.View style={[styles.ball, scaleStyles]} />
         </View>
     );
 }
-
+const NormalLoader = () => {
+    return (
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <ActivityIndicator size={'large'} color={Colors.primaryMuted} />
+        </View>
+    )
+}
+export { AnimatedLoader, NormalLoader }
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -53,10 +57,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     ball: {
-        height: 30,
-        width: 30,
+        height: 25,
+        width: 25,
         backgroundColor: Colors.primaryMuted,
-        borderRadius: 30,
+        borderRadius: 25,
         shadowColor: '#FFFFF0',
         shadowOffset: {
             width: 2,
@@ -65,7 +69,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.58,
 
         shadowRadius: 16.00,
-        
+
         elevation: 10,
     },
 

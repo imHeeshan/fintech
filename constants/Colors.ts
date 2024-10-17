@@ -8,6 +8,7 @@ export default {
   white:'#fff',
   lightBlue:'#6495ED',
   blackBlur:"rgba(0, 0, .5, .5)",
-  success:"#5cb85c",
-  danger:'#DD1712'
+  success:"#16c784",
+  danger:'#ea3943',
+  warning:"#f5b97f"
 }

@@ -26,14 +26,14 @@ const Page = () => {
           asChild
           style={[defaultStyles.pillButton, { flex: 1, backgroundColor: Colors.dark }]}>
           <TouchableOpacity>
-            <Text style={[defaultStyles.buttonText]}>Log in</Text>
+            <Text style={[defaultStyles.buttonTxt]}>Log in</Text>
           </TouchableOpacity>
         </Link>
         <Link href={'/signup'}
           asChild
           style={[defaultStyles.pillButton, { flex: 1, backgroundColor: Colors.white }]}>
           <TouchableOpacity>
-            <Text style={[defaultStyles.buttonText,{color:Colors.dark}]}>Sign up</Text>
+            <Text style={[defaultStyles.buttonTxt,{color:Colors.dark}]}>Sign up</Text>
           </TouchableOpacity>
         </Link>
       </View>

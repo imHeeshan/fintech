@@ -70,8 +70,8 @@ const Page = () => {
 
     return (
         <View style={defaultStyles.container}>
-            <Text style={[defaultStyles.headerText]}>6-digit code</Text>
-            <Text style={[defaultStyles.descriptionText]}>Code send to {phone} unless you already have an account</Text>
+            <Text style={[defaultStyles.headerTxt]}>6-digit code</Text>
+            <Text style={[defaultStyles.descriptionTxt]}>Code send to {phone} unless you already have an account</Text>
 
             <CodeField
                 ref={ref}
@@ -96,7 +96,7 @@ const Page = () => {
             />
             <Link href={'/login'} asChild replace>
                 <TouchableOpacity>
-                    <Text style={[defaultStyles.linkText,]}>Already have an account? Login </Text>
+                    <Text style={[defaultStyles.linkTxt,]}>Already have an account? Login </Text>
                 </TouchableOpacity>
             </Link>
         </View>

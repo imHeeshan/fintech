@@ -1,4 +1,4 @@
-import { Platform, StyleSheet, Text, View } from 'react-native'
+import { Platform, StyleSheet } from 'react-native'
 import React from 'react'
 import { Tabs } from 'expo-router'
 import { Entypo, FontAwesome } from '@expo/vector-icons'
@@ -60,8 +60,7 @@ export default function TabLayout() {
             <Tabs.Screen name='crypto'
                 options={{
                     title: "Crypto",
-                    tabBarIcon: ({ size, color }) =>
-                        <FontAwesome name='bitcoin' size={size} color={color} />,
+                    tabBarIcon: ({ size, color }) =>  <FontAwesome name='bitcoin' size={size} color={color} />,
                     header: () => <CustomHeader />,
                     headerTransparent: true,
                     // headerShown: false
