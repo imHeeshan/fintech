@@ -1,10 +1,10 @@
 import { tickers } from '@/assets/data/dummyData';
 export async function GET(request: Request) {
   const url = new URL(request.url);
-  const slug = url.searchParams.get("slug");
+  const coinId = url.searchParams.get("coinId");
 
   const response = await fetch(
-    `https://api.coingecko.com/api/v3/coins/${slug}/tickers`,
+    `https://api.coingecko.com/api/v3/coins/${coinId}/tickers`,
     {
       headers: {
         'Content-Type': 'application/json',

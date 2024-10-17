@@ -10,7 +10,7 @@ import WidgetList from '@/components/SortableList/WidgetList'
 import { useHeaderHeight } from '@react-navigation/elements'
 const Page = () => {
   const headerHeight = useHeaderHeight()
- 
+
   const balance = useBalanceStore((state) => state.balance);
   const transactions = useBalanceStore((state) => state.transactions);
   const clearTransactions = useBalanceStore((state) => state.clearTransactions);
@@ -36,10 +36,8 @@ const Page = () => {
     >
 
       <View style={styles.account}>
-        <View style={styles.row}>
-          <Text style={styles.balance}>{balance}</Text>
-          <Text style={styles.currency}>€</Text>
-        </View>
+        <Text style={styles.currency}>$</Text>
+        <Text style={styles.balance}>{balance}</Text>
       </View>
       <View style={styles.actionRow}>
         <RoundButton icon='add' text="Add money" onPress={handleAddMoney} />
@@ -79,20 +77,18 @@ export default Page
 const styles = StyleSheet.create({
   account: {
     margin: 50,
-    alignItems: 'center'
-  },
-  row: {
+    alignItems: 'center',
     flexDirection: 'row',
-    alignItems: 'flex-end',
     justifyContent: 'center',
     gap: 10,
   },
+
   balance: {
     fontSize: 50,
     fontWeight: 'bold'
   },
   currency: {
-    fontSize: 20,
+    fontSize: 35,
     fontWeight: '600'
   },
   actionRow: {
@@ -114,5 +110,5 @@ const styles = StyleSheet.create({
     gap: 16,
 
   },
-  
+
 })

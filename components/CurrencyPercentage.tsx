@@ -3,10 +3,10 @@ import React from 'react'
 import { Ionicons } from '@expo/vector-icons'
 import Colors from '@/constants/Colors'
 type TProps = {
-    percentage: number | 0
+    percentage: number
     txtColor?: boolean
 }
-const CurrencyPercentage = ({ percentage, txtColor }: TProps) => {
+const CurrencyPercentage = ({ percentage = 0, txtColor }: TProps) => {
     const checkPercentageValue = percentage > 0
     return (
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>

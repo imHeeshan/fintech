@@ -1,87 +1,67 @@
-import React, { useEffect, useRef, useState } from "react";
-import { ActivityIndicator, Alert, Dimensions, NativeScrollEvent, NativeSyntheticEvent, RefreshControl } from 'react-native';
+import React, { useEffect, useState } from "react";
+import { Dimensions, NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 import { TabView, TabBar, SceneRendererProps } from 'react-native-tab-view';
 import Colors from "@/constants/Colors";
-import { CurrencyInfo, ICurrency } from "@/interface/crypto";
 import { useQuery } from "@tanstack/react-query";
 import { View, Text, StyleSheet, StatusBar } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useHeaderHeight } from '@react-navigation/elements'
 import TabRoute from "../crypto/TabRoute";
 import { currencyFilter } from "@/constants/ReusableFn";
-import { useNavigation, useRouter, useSegments } from "expo-router";
-import {  NormalLoader } from "@/components/Loader";
+import { NormalLoader } from "@/components/Loader";
+import { ICurrency } from "@/interface/cryptoInterface";
 
 
 const Page = () => {
   const headerHeight = useHeaderHeight()
-  const insets = useSafeAreaInsets()
   const [currentPage, setCurrentPage] = useState(1);
   const [paginationData, setPaginationData] = useState<ICurrency[]>([]);
-  const [currencyDetails, setCurrencyDetails] = useState<CurrencyInfo>({})
   const [index, setIndex] = useState(0);
-  const [limit, setLimit] = useState(30)
   const [refreshing, setRefreshing] = useState(false);
+  const [isLoadingData, setIsLoadingData] = useState(false)
 
-
-  const { data: currencies, isFetching } = useQuery({
-    queryKey: ['currencies', currentPage, limit],
+  const { data: currencies, isFetching, refetch } = useQuery({
+    queryKey: ['currencies', currentPage],
     queryFn: async () => {
-      const response = await fetch(`/api/listings?page=${currentPage}&limit=${limit}`);
+      const response = await fetch(`/api/listings?page=${currentPage}`);
       if (!response.ok) {
         throw new Error('Failed to fetch data');
       }
       return response.json();
     },
-    enabled: !!currentPage,
+    enabled: false,
     placeholderData: [],
   });
-
-  const allIds = [...currencies.map((currency: ICurrency) => currency.id)];
-
-  const uniqueIds = [...new Set(allIds)].join(',');
   useEffect(() => {
-if(refreshing){
-  setPaginationData([])
-
-}
+    if (currentPage || refreshing) {
+      refetch();
+    }
+  }, [currentPage, refreshing]);
+  useEffect(() => {
+    if (refreshing) {
+      setPaginationData([])
+    }
+    if (currentPage > 1) {
+      setIsLoadingData(true)
+    }
     if (currencies?.length > 0) {
+      console.log(currencies[0]);
+      
       setPaginationData((prevData) => {
         const newData = currencies.filter(
-          (currency: { id: number; }) => !prevData.some((item) => item.id === currency.id) // Avoid duplicates
+          (currency: { id: string }) => !prevData.some((item) => item.id === currency.id) // Avoid duplicates
         );
         return [...prevData, ...newData];
       });
+      setRefreshing(false)
+      setIsLoadingData(false)
     }
 
   }, [currencies, refreshing]);
-  useEffect(() => {
-    setRefreshing(false)
-  }, [refreshing])
 
-  const { data: currencyInfo, isFetching: isLogoFetching } = useQuery({
-    queryKey: ['currencyInfo', uniqueIds],
-    queryFn: async () => {
-      const response = await fetch(`/api/info?ids=${uniqueIds}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch data');
-      }
-      return response.json();
-
-    },
-    enabled: !!uniqueIds,
-    placeholderData: []
-
-  });
-  useEffect(() => {
-    if (currencyInfo) {
-      setCurrencyDetails((prevData) => ({ ...prevData, ...currencyInfo }));
-    }
-  }, [currencyInfo])
 
   const loadMoreItem = () => {
     if (!isFetching && currencies?.length > 0) {
-      setLimit(10)
       setCurrentPage((prevPage) => prevPage + 1);
     }
   };
@@ -90,13 +70,12 @@ if(refreshing){
     const isCloseToBottom =
       nativeEvent.layoutMeasurement.height + nativeEvent.contentOffset.y >=
       nativeEvent.contentSize.height - 20;
-    if (isCloseToBottom && !isFetching && !isLogoFetching && currentPage < 9) {
+    if (isCloseToBottom && !isFetching) {
       loadMoreItem();
     }
   };
   const handlePullRefresh = async () => {
     setRefreshing(true)
-    setLimit(30)
     setCurrentPage(1)
   }
   type Route = {
@@ -117,20 +96,23 @@ if(refreshing){
     switch (route.key) {
       case 'all':
         return <TabRoute
-          currencies={paginationData} currencyDetails={currencyDetails}
+          currencies={paginationData}
           handleScroll={handleScroll}
           handlePullRefresh={handlePullRefresh}
           refreshing={refreshing}
-          isFetching={isFetching}
-
+          isFetching={isLoadingData}
         />;
       case 'gainer':
         return <TabRoute
           currencies={currencyFilter(paginationData, "gainer")}
-          currencyDetails={currencyDetails} />;
+          handleScroll={handleScroll}
+
+        />;
       case 'losers':
         return <TabRoute
-          currencies={currencyFilter(paginationData, "loser")} currencyDetails={currencyDetails} />
+          currencies={currencyFilter(paginationData, "loser")}
+          handleScroll={handleScroll}
+        />
       default:
         return null;
     }
@@ -151,11 +133,10 @@ if(refreshing){
       )}
     />
   );
-  const currencyDetailsLength = Object.keys(currencyDetails).length
 
-  if (currencyDetailsLength === 0 && !refreshing) {
-    return <NormalLoader/>
-   }
+  if (paginationData.length === 0 && !refreshing) {
+    return <NormalLoader />
+  }
 
   return (
     <View style={{ paddingTop: headerHeight, flex: 1, paddingHorizontal: 10 }}>

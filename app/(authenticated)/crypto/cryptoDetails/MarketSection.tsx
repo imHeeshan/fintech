@@ -12,29 +12,29 @@ import Animated, { useAnimatedStyle, useDerivedValue, useSharedValue, withTiming
 import { FontAwesome } from '@expo/vector-icons';
 
 interface Iprops {
-  slug: string,
+  coinId: string,
   activeIndex: number,
   currencyName: string
 }
 const tblTitle = ["#", "Exchange", "Pair", "Price", "Volume (24h)", "Volume %", "Confidence", "Updated"]
-const MarketSection = ({ slug, activeIndex, currencyName }: Iprops) => {
+const MarketSection = ({ coinId, activeIndex, currencyName }: Iprops) => {
   const scrollX = useSharedValue(0);
 
   const { data: markets, isFetching } = useQuery<IMarket[]>({
-    queryKey: ['markets', slug],
+    queryKey: ['markets', coinId],
     queryFn: async () => {
-      const response = await fetch(`/api/markets?slug=${slug}`);
+      const response = await fetch(`/api/markets?coinId=${coinId}`);
       if (!response.ok) {
         throw new Error('Failed to fetch data');
       }
       return response.json();
     },
-    enabled: !!slug && activeIndex === 2,
+    enabled: !!coinId && activeIndex === 2,
     placeholderData: []
   });
 
   const { data: exchangesInfo } = useQuery<IExchanges[]>({
-    queryKey: ['exchangesInfo', slug],
+    queryKey: ['exchangesInfo', coinId],
     queryFn: async () => {
       const response = await fetch(`/api/exchanges`);
       if (!response.ok) {
@@ -42,7 +42,7 @@ const MarketSection = ({ slug, activeIndex, currencyName }: Iprops) => {
       }
       return response.json();
     },
-    enabled: !!slug && activeIndex === 2,
+    enabled: !!coinId && activeIndex === 2,
     placeholderData: [],
 
   });
@@ -60,11 +60,11 @@ const MarketSection = ({ slug, activeIndex, currencyName }: Iprops) => {
       width,
     };
   });
-  // if (isFetching) {
-  //   return <NormalLoader />
-  // }
+  if (isFetching) {
+    return <NormalLoader />
+  }
   return (
-    <View style={[defaultStyles.sectionBlock,{marginBottom:20}]}>
+    <View style={[defaultStyles.sectionBlock, { marginBottom: 20 }]}>
       <Text style={[defaultStyles.subTitle,
       { color: Colors.dark }]}>{currencyName} Markets</Text>
       <View style={{ flexDirection: 'row' }}>
@@ -72,11 +72,11 @@ const MarketSection = ({ slug, activeIndex, currencyName }: Iprops) => {
           <View style={styles.tableRow}>
             {tblTitle.slice(0, 2).map((title, index) => (
               <Animated.View key={index}
-                style={[index === 0 ? styles.indexCol : styles.tableColHeader && animatedViewStyle,{alignItems:'center'}]}>
+                style={[index === 0 ? styles.indexCol : styles.tableColHeader && animatedViewStyle, { alignItems: 'center' }]}>
                 <Text
                   style={styles.tableHeaderTxt}>
                   {index === 0 ? title : scrollXValue > 15 ?
-                   <FontAwesome name='exchange' size={16} /> : title}
+                    <FontAwesome name='exchange' size={16} /> : title}
 
                 </Text>
               </Animated.View>
@@ -91,9 +91,9 @@ const MarketSection = ({ slug, activeIndex, currencyName }: Iprops) => {
                   <Text style={styles.indexTxt}>{index + 1}</Text>
                 </View>
                 <Animated.View style={[styles.tableCol,
-                defaultStyles.flexRowView,animatedViewStyle, { gap: 5, paddingHorizontal: 5 }]}>
+                defaultStyles.flexRowView, animatedViewStyle, { gap: 5, paddingHorizontal: 5 }]}>
                   <Image source={{ uri: exchanges?.image ?? "" }} style={styles.logo} />
-                  {scrollXValue<15&&
+                  {scrollXValue < 15 &&
                     <Text style={[styles.tableTxt, { fontWeight: '600' }]}
                       numberOfLines={2}>
                       {market.market?.name}
@@ -119,8 +119,8 @@ const MarketSection = ({ slug, activeIndex, currencyName }: Iprops) => {
               const exchanges = exchangesInfo?.find(exchange =>
                 exchange.name?.toLowerCase() === market.market?.name.toLowerCase());
 
-              const totalVolume = markets.reduce((acc, market) => acc + market.volume, 0);
-              const volumePercentage = totalVolume > 0 ? ((market.volume / totalVolume) * 100).toFixed(2) : 0;
+              const totalVolume = markets.reduce((acc, market) => acc + (market.volume ?? 0), 0);
+              const volumePercentage = totalVolume > 0 ? (((market.volume ?? 0) / totalVolume) * 100).toFixed(2) : 0;
               return (
                 <View key={index} style={styles.tableRow}>
                   <View style={[styles.tableCol,]}>
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
   tableHeaderTxt: {
     fontWeight: 'bold',
     fontSize: 14,
-    alignItems:'center'
+    alignItems: 'center'
   },
   indexCol: {
     width: 30,

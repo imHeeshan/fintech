@@ -9,14 +9,13 @@ const RenderListHeader = ({ data }: any) => {
     return (
         <View style={{ marginHorizontal: 16 }}>
             <View style={styles.headerContainer}>
-
                 <Text style={[defaultStyles.subTitle, { color: Colors.dark, fontSize: 22 }]}>{data?.name}</Text>
             </View>
             <View style={styles.headerContainer}>
                 <View style={[defaultStyles.flexRowView, { gap: 5 }]}>
-                    <Text style={[defaultStyles.subTitle, { fontSize: 16 }]}>{data?.symbol}</Text>
+                    <Text style={[defaultStyles.subTitle, { fontSize: 16 }]}>{data?.symbol?.toUpperCase()}</Text>
                 </View>
-                <Image source={{ uri: data?.logo }} style={{ width: 50, height: 50, borderRadius: 40 }} />
+                <Image source={{ uri: data?.image?.large }} style={{ width: 50, height: 50, borderRadius: 40 }} />
             </View>
             <View style={{ flexDirection: 'row', gap: 16, margin: 12 }}>
                 <TouchableOpacity style={[defaultStyles.pillButtonSmall, { backgroundColor: Colors.primary, }]}>

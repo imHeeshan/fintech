@@ -5,22 +5,27 @@ const API_KEY = process.env.CRYPTO_NEWS_API_KEY
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
-  const slug = url.searchParams.get('slug')
-console.log(slug,"aaaaaaaaaaaaaaa sluf");
+  const coinId = url.searchParams.get('coinId')
+console.log(coinId);
 
-  // const initialLimit = 30;
-  // const subsequentLimit = 10;
+  try {
+    const response = await fetch(
+      `https://newsapi.org/v2/everything?q=${coinId}&pageSize=10&apiKey=${API_KEY}`,
+      {
+        headers: {},
+      }
+    );
+    if (!response.ok) {
+      throw new Error(`Error fetching data: ${response.statusText}`); 
+    }
 
+    const res = await response.json(); // Parse JSON response
+    
+    return Response.json(res); // Return the fetched data
+  } catch (error) {
+    return Response.json({ error: 'Failed to fetch data from CoinGecko' }, { status: 500 });
+  }
 
-  // const response = await fetch(
-  //     `https://newsapi.org/v2/everything?q=${slug}&pageSize=10&apiKey=${API_KEY}`,
-
-  // );
-
-  // const res = await response.json();
-  // console.log();
-
-  return Response.json(currncyNews.articles);
 
 }
 

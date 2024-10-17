@@ -1,39 +1,23 @@
-import { listings } from '@/assets/data/dummyData';
-import { ExpoRequest, ExpoResponse } from 'expo-router/server'
-
-const API_KEY = process.env.CRYPTO_API_KEY
-
 export async function GET(request: Request) {
   const url = new URL(request.url);
-  const page = Number(url.searchParams.get('page'))
-  const limit = Number(url.searchParams.get('limit')) | 10
-  const id = Number(url.searchParams.get('id')) | 0
-  const initialLimit = 30;
-  const subsequentLimit = 10;
-  console.log(id,"idddddds nes");
+  const page = Number(url.searchParams.get('page')) || 1;
+  console.log(page,"sd");
   
-  if (id !== 0) {
-    const findList = listings.find(crypto => crypto.id === id);
-    return Response.json(findList);
+  try {
+    const response = await fetch(
+      `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=20&page=${page}`,
+      {
+        headers: {},
+      }
+    );
+    if (!response.ok) {
+      throw new Error(`Error fetching data: ${response.statusText}`); 
+    }
 
+    const res = await response.json(); // Parse JSON response
+    
+    return Response.json(res); // Return the fetched data
+  } catch (error) {
+    return Response.json({ error: 'Failed to fetch data from CoinGecko' }, { status: 500 });
   }
-  const startIndex = page === 1 ? 0 : initialLimit + (page - 2) * subsequentLimit;
-  const paginatedData = listings.slice(startIndex, startIndex + limit);
-
-  // const limit = url.searchParams.get('limit') || '5';
-
-  // const response = await fetch(
-  //     `https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?start=1&limit=${limit}&convert=EUR`,
-  //     {
-  //         headers: {
-  //             "X-CMC_PRO_API_KEY": API_KEY!,
-  //         },
-  //     }
-  // );
-
-  // const res = await response.json();
-  // return Response.json(res.data);
-
-  return Response.json(paginatedData);
 }
-

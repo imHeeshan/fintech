@@ -4,27 +4,26 @@ import { Link } from 'expo-router';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Colors from '@/constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
-import { CurrencyInfo, ICurrency } from '@/interface/crypto';
 import CurrencyPercentage from './CurrencyPercentage';
+import { ICurrency } from '@/interface/cryptoInterface';
 
 
 type renderProps = {
   currency: ICurrency,
-  currencyDetails: CurrencyInfo
 }
-const RenderCurrencyList = ({ currency, currencyDetails }: renderProps) => {
-  const checkPercentageValue = currency.quote.EUR.percent_change_1h
+const RenderCurrencyList = ({ currency }: renderProps) => {
+  
   return (
     <Link href={`/crypto/cryptoDetails/${currency.id}`} asChild key={currency.id}>
       <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', gap: 14 }}>
-        <Image source={{ uri: currencyDetails[currency.id]?.logo }} style={{ width: 40, height: 40 }} />
+        <Image source={{ uri: currency.image }} style={{ width: 40, height: 40 }} />
         <View style={{ flex: 1, gap: 6 }}>
           <Text style={{ fontWeight: '600', color: Colors.dark }}>{currency.name}</Text>
-          <Text style={{ color: Colors.gray, fontSize: 13 }}>{currency.symbol}</Text>
+          <Text style={{ color: Colors.gray, fontSize: 13 }}>{currency.symbol.toLocaleUpperCase()}</Text>
         </View>
         <View style={{ alignItems: 'flex-end', gap: 6 }}>
-          <Text>{currency.quote.EUR.price.toFixed(2)}€</Text>
-          <CurrencyPercentage percentage={checkPercentageValue} />
+          <Text>$ {currency.current_price.toFixed(2)}</Text>
+          <CurrencyPercentage percentage={currency.price_change_percentage_24h} />
         </View>
       </TouchableOpacity>
     </Link>

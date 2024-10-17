@@ -1,52 +1,22 @@
-import { currencyInfo } from '@/assets/data/dummyData';
-import { CurrencyInfo } from '@/interface/crypto';
-import { ExpoRequest, ExpoResponse } from 'expo-router/server'
-
-const API_KEY = process.env.CRYPTO_API_KEY
-
-type tCurrency = {
-  [key: string]: CurrencyInfo; 
-};
 export async function GET(request: Request) {
   const url = new URL(request.url);
-  const ids = url.searchParams.get("ids");
-
-  if (ids) {
-    const idArray = ids.split(',');
-    const currencyData = idArray.reduce((acc: tCurrency, id: string) => {
-      if (currencyInfo[id]) {
-        acc[id] = currencyInfo[id];
+  const coinId = url.searchParams.get('id')  
+  try {
+    const response = await fetch(
+      `https://api.coingecko.com/api/v3/coins/${coinId}`,
+      {
+        headers: {},
       }
-      return acc;
-    }, {});
+    );
+    if (!response.ok) {
+      throw new Error(`Error fetching data: ${response.statusText}`);
+    }
 
-    return Response.json(currencyData);
+    const res = await response.json(); // Parse JSON response
+    const { id, name, symbol, description,image,market_data } = res;
+    return Response.json({ id, name, symbol, description: description.en,image,market_data }); // Return only the relevant fields
+
+  } catch (error) {
+    return Response.json({ error: 'Failed to fetch data from CoinGecko' }, { status: 500 });
   }
-
-  return Response.json({});
-  // const simplifiedData = Object.values(data).map(({ id, name, symbol, logo, description }) => ({
-  //   id,
-  //   name,
-  //   symbol,
-  //   logo,
-  //   description,
-  // }));
-
-  // return Response.json(simplifiedData);
-
-  // const response = await fetch(
-  //   `https://pro-api.coinmarketcap.com/v2/cryptocurrency/info?id=${ids}`,
-  //   {
-  //     headers: {
-  //       "X-CMC_PRO_API_KEY": API_KEY!,
-  //     },
-  //   },
-  // )
-  // const res = await response.json();
-  // console.log("jjjjjjjjaaaaaaaaaa api", res.data);
-
-  // return Response.json(res.data)
-  // return Response.json(paginatedData)
 }
-
-

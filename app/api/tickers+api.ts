@@ -1,23 +1,30 @@
-import { tickers } from '@/assets/data/dummyData';
-import { ExpoRequest, ExpoResponse } from 'expo-router/server';
-
 export async function GET(request: Request) {
   const url = new URL(request.url);
-  const symbol = url.searchParams.get('symbol')
 
+  const coinId = url.searchParams.get('coinId') || ""
+  const currency = url.searchParams.get('currency') || "usd"
+  const days = url.searchParams.get('days') || "30"
+  const interval = url.searchParams.get('interval') || "daily"
+  console.log(currency,
+    days,
+    interval, coinId,";ated api");
 
-  const ticker = tickers.find(crypto => crypto.symbol === symbol);
-  if (ticker) { 
-    return Response.json(ticker.history);
-  } else {
-    return `No data found for symbol: ${symbol}`;
+  try {
+    const response = await fetch(
+      `https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=${currency}&days=${days}&interval=${interval}`,
+      {
+        headers: {},
+
+      }
+    );
+    if (!response.ok) {
+      throw new Error(`Error fetching data: ${response.statusText}`);
+    }
+
+    const res = await response.json(); // Parse JSON response
+
+    return Response.json(res); // Return the fetched data
+  } catch (error) {
+    return Response.json({ error: 'Failed to fetch data from CoinGecko' }, { status: 500 });
   }
-  // const response = await fetch(
-  //   `https://api.coinpaprika.com/v1/tickers/btc-bitcoin/historical?start=2024-01-01&interval=1d`
-  // );
-
-  // const res = await response.json();
-  // return ExpoResponse.json(data);
-  // return Response.json(data);
 }
-

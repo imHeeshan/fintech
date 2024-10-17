@@ -53,13 +53,13 @@ console.log(result);
     <View style={styles.container}>
       {!authenticated && (
         <View style={styles.authContainer}>
-          <Text style={styles.authText}>
+          {/* <Text style={styles.authText}>
             {isBiometricSupported
               ? 'Biometric Authentication is available'
               : 'Your device does not support Biometrics'}
-          </Text>
+          </Text> */}
           <TouchableOpacity onPress={handleAuthentication}>
-            <Entypo name="fingerprint" size={60} color={Colors.primaryMuted} />
+            <Text style={{color:Colors.primary}}>Unlock</Text>
           </TouchableOpacity>
         </View>
       )}

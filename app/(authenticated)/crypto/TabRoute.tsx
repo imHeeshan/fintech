@@ -11,25 +11,23 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useHeaderHeight } from "@react-navigation/elements"
-import { CurrencyInfo, ICurrency } from '@/interface/crypto';
 import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 import Colors from '@/constants/Colors';
 import { SCREEN_HEIGHT } from '@/units/units';
+import { ICurrency } from '@/interface/cryptoInterface';
 
 interface ITabProps {
   currencies: ICurrency[],
-  currencyDetails: CurrencyInfo,
+  // currencyDetails: CurrencyInfo,
   handleScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void,
   handlePullRefresh?: () => {}
   refreshing?: boolean,
   isFetching?: boolean
 }
-const Page = ({ currencies, currencyDetails,
+const Page = ({ currencies,
   handleScroll, handlePullRefresh, refreshing = false, isFetching }: ITabProps) => {
-  const headerHeight = useHeaderHeight()
   const insets = useSafeAreaInsets()
   const tabBarHeight = insets.bottom + 60;
-
 
   return (
     <ScrollView
@@ -45,9 +43,9 @@ const Page = ({ currencies, currencyDetails,
           colors={[Colors.primaryMuted]} />
       }
     >
-      <View style={[defaultStyles.sectionBlock, { marginHorizontal: 0 }]}>
+      <View style={[defaultStyles.sectionBlock, { marginHorizontal: 0, gap: 14 }]}>
         {currencies.map((currency) => <RenderCurrencyList
-          currency={currency} currencyDetails={currencyDetails} />)}
+          currency={currency} key={currency.id} />)}
         {isFetching && (
           <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingVertical: 10 }}>
             <ActivityIndicator size={'large'} color={Colors.primaryMuted} />

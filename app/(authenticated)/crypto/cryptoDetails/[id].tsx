@@ -1,4 +1,4 @@
-import { SafeAreaView, SectionList, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { SafeAreaView, SectionList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router'
 import { useHeaderHeight } from '@react-navigation/elements'
@@ -14,16 +14,15 @@ import CurrencyPercentage from '@/components/CurrencyPercentage'
 import MarketSection from './MarketSection'
 import Transaction from './Transaction'
 import OverviewSection from './OverviewSection'
-
-
-const categories = ['Overview', 'News', 'Markets', 'Transactions',];
+import { ICurrencyInfo, ITickerHistory } from '@/interface/cryptoInterface'
+const categories = ['Overview', 'News', 'Markets',"Transactions"];
 
 const Page = () => {
-    const { id } = useLocalSearchParams()
-    const [activeIndex, setActiveIndex] = useState<number>(2)
-    const [symbol, setSymbol] = useState<string>("")
-    const [slug, setSlug] = useState<string>("")
-
+    const { id } = useLocalSearchParams() as { id: string }
+    const [activeIndex, setActiveIndex] = useState<number>(0)
+    const currency = "usd"
+    const days = "60"
+    const interval = "daily"
     const headerHeight = useHeaderHeight()
     const router = useRouter()
     const scrollY = useSharedValue(0);
@@ -48,57 +47,41 @@ const Page = () => {
         };
     });
 
-    const { data: currencyInfo } = useQuery({
+    const { data: currencyInfo } = useQuery<ICurrencyInfo>({
         queryKey: ['currencyInfo', id],
         queryFn: async () => {
-            const info = await fetch(`/api/info?ids=${id}`).then((res) => res.json())
-            return info[+id]
-        },
-        enabled: !!id
-    })
-    const { data: currency } = useQuery({
-        queryKey: ['currency', id],
-        queryFn: async () => {
-            const response = await fetch(`/api/listings?id=${id}`);
-            return response.json()
+            const info = await fetch(`/api/info?id=${id}`).then((res) => res.json())
+            return info
         },
         enabled: !!id
     })
 
 
-    const { data: tickers } = useQuery({
-        queryKey: ['tickers', currencyInfo],
+    const { data: tickers } = useQuery<ITickerHistory>({
+        queryKey: ['tickers', id, currency, days, interval],
         queryFn: async () => {
-            const response = await fetch(`/api/tickers?symbol=${symbol}`);
+            const response = await fetch(`/api/tickers?coinId=${id}&currency=${currency}&days=${days}&interval=${interval}`);
             if (!response.ok) {
                 throw new Error('Failed to fetch data');
             }
             return response.json();
         },
-        enabled: !!symbol
+        enabled: !!id
     });
-
-    useEffect(() => {
-        if (currencyInfo) {
-            setSymbol(currencyInfo?.symbol)
-            setSlug(currencyInfo?.slug)
-        }
-    }, [currencyInfo])
-
-    if (tickers?.length === 0 || tickers == undefined) {
-        return <NormalLoader />
-    }
+ 
 
     const renderSection = () => {
+        const defaultTickerHistory: ITickerHistory = { prices: [], market_caps: [], total_volumes: [] };
+
         switch (activeIndex) {
             case 0:
-                return <OverviewSection tickers={tickers} currencyInfo={currencyInfo} />;
+                return <OverviewSection tickers={tickers || defaultTickerHistory} currencyInfo={currencyInfo} />;
             case 1:
-                return <NewsSection slug={slug} activeIndex={activeIndex} />;
+                return <NewsSection coinId={id} activeIndex={activeIndex} />;
             case 2:
-                return <MarketSection 
-                slug={slug} activeIndex={activeIndex} 
-                currencyName={currencyInfo?.name ? currencyInfo.name : ''} />;
+                return <MarketSection
+                    coinId={id} activeIndex={activeIndex}
+                    currencyName={currencyInfo?.name ? currencyInfo.name : ''} />;
             case 3:
                 return <Transaction />;
             default:
@@ -121,7 +104,7 @@ const Page = () => {
                             },
                                 animatedViewStyle]}>
                                 <CurrencyPercentage
-                                    percentage={currency?.quote?.EUR?.percent_change_1h}
+                                    percentage={currencyInfo?.market_data?.price_change_percentage_24h ?? 0}
                                     txtColor={true}
                                 />
                             </Animated.View>

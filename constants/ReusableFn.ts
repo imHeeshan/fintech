@@ -1,12 +1,12 @@
-import { ICurrency } from "@/interface/crypto"
+import { ICurrency } from "@/interface/cryptoInterface";
 
 export const currencyFilter = (filterData: ICurrency[], condition: string) => {
   const filter = filterData.filter((currency) => condition === "gainer" ?
-    currency.quote.EUR.percent_change_1h > 0 : condition === "loser" ?
-      currency.quote.EUR.percent_change_1h < 0 : filterData)
+    currency.price_change_percentage_24h > 0 : condition === "loser" ?
+      currency.price_change_percentage_24h < 0 : filterData)
   return filter
 }
-export const priceformatFn = (num: number) => {
+export const priceformatFn = (num: number, decimal: number=1) => {
   const billion = 1_000_000_000;
   const million = 1_000_000;
   const trillion = 1_000_000_000_000;
@@ -14,15 +14,15 @@ export const priceformatFn = (num: number) => {
   const quintillion = 1_000_000_000_000_000_000;
 
   if (num >= quintillion) {
-    return `${(num / quintillion).toFixed(1)} Qi`;
+    return `${(num / quintillion).toFixed(decimal)} Qi`;
   } else if (num >= quadrillion) {
-    return `${(num / quadrillion).toFixed(1)} Q`;
+    return `${(num / quadrillion).toFixed(decimal)} Q`;
   } else if (num >= trillion) {
-    return `${(num / trillion).toFixed(1)} T`;
+    return `${(num / trillion).toFixed(decimal)} T`;
   } else if (num >= billion) {
-    return `${(num / billion).toFixed(1)} B`;
+    return `${(num / billion).toFixed(decimal)} B`;
   } else if (num >= million) {
-    return `${(num / million).toFixed(1)} M`;
+    return `${(num / million).toFixed(decimal)} M`;
   } else {
     return num.toString();
   }

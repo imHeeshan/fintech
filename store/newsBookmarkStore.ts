@@ -3,7 +3,7 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import { zustandStorage } from "@/store/mmkv-storage";
 
 export interface IBookmark {
-    id: number,
+    id: string,
 }
 
 export interface IBookmarkState {
