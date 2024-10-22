@@ -6,18 +6,11 @@
 <img src="https://github.com/user-attachments/assets/91c34745-3b81-4221-95ef-5be38d06927f" alt="verify" width="300"/>
 <img src="https://github.com/user-attachments/assets/d64fec6d-0055-4d21-ae69-1deedcfb2600" alt="home" width="300"/>
 
-## Intro GIF
-<img src="https://github.com/user-attachments/assets/a0266737-2360-4521-8931-d0e04eb8da34" alt="Intro GIF" width="300" height="400"/>
-
-## Crypto GIF
-<img src="https://github.com/user-attachments/assets/66070956-2f75-4167-9632-94a775c165f8" alt="coin screen" width="300"/>
-
-## Overview GIF
-<img src="https://github.com/user-attachments/assets/99098321-2a3d-45e7-b1a8-9ab2473a5062" alt="Overview GIF" width="300"/>
-
-## Markets GIF
-<img src="https://github.com/user-attachments/assets/1063dfe9-63ab-46dc-9cdc-bf92f551ba33" alt="markets" width="300"/>
-
+## GIF
+<img src="https://github.com/user-attachments/assets/a0266737-2360-4521-8931-d0e04eb8da34" alt="Intro GIF" width="300" height="500"/>
+<img src="https://github.com/user-attachments/assets/1063dfe9-63ab-46dc-9cdc-bf92f551ba33" alt="markets" width="300"  height="500"/>
+<img src="https://github.com/user-attachments/assets/66070956-2f75-4167-9632-94a775c165f8" alt="coin screen" width="300"  height="500"/>
+<img src="https://github.com/user-attachments/assets/99098321-2a3d-45e7-b1a8-9ab2473a5062" alt="Overview GIF" width="300"  height="500"/>
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
