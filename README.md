@@ -1,16 +1,13 @@
 
 # Welcome to **Fintech App (Clone) 👋**
 
-
-<img src="https://github.com/user-attachments/assets/b7d771cc-e742-49f7-bb55-d1d020530fd8" alt="Fintech App" width="300"/>
-
 ## Screenshot
 <img src="https://github.com/user-attachments/assets/53060bf9-3ebf-4f02-b398-24b380740299" alt="sign up" width="300"/>
 <img src="https://github.com/user-attachments/assets/91c34745-3b81-4221-95ef-5be38d06927f" alt="verify" width="300"/>
 <img src="https://github.com/user-attachments/assets/d64fec6d-0055-4d21-ae69-1deedcfb2600" alt="home" width="300"/>
 
 ## Intro GIF
-<img src="https://github.com/user-attachments/assets/a0266737-2360-4521-8931-d0e04eb8da34" alt="Intro GIF" width="300"/>
+<img src="https://github.com/user-attachments/assets/a0266737-2360-4521-8931-d0e04eb8da34" alt="Intro GIF" width="300" height="400"/>
 
 ## Crypto GIF
 <img src="https://github.com/user-attachments/assets/66070956-2f75-4167-9632-94a775c165f8" alt="coin screen" width="300"/>
